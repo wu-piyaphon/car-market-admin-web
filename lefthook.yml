@@ -1,0 +1,7 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint-staged:
+      glob: "*.{js,jsx,ts,tsx}"
+      run: yarn eslint --fix {staged_files} && yarn prettier --write {staged_files}
+      stage_fixed: true
