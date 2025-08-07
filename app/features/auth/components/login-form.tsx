@@ -7,6 +7,7 @@ import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type TLoginSchema } from "../schemas/login";
+import { useLoginMutation } from "../api/auth.mutations";
 
 // ----------------------------------------------------------------------
 
@@ -14,6 +15,8 @@ export default function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { mutateAsync } = useLoginMutation();
+
   const methods = useForm<TLoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -22,11 +25,17 @@ export default function LoginForm({
     },
   });
 
-  const { handleSubmit } = methods;
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
 
-  const onSubmit = handleSubmit(data => {
-    console.log("Form submitted with data:", data);
-    // Handle form submission logic here
+  const onSubmit = handleSubmit(async data => {
+    try {
+      await mutateAsync(data);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   });
 
   return (
@@ -62,7 +71,7 @@ export default function LoginForm({
               />
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" loading={isSubmitting}>
               Login
             </Button>
           </Form>

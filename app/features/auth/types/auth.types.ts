@@ -23,5 +23,11 @@ export type AuthCredentials = {
 
 export type AuthLoginResponse = {
   user: AuthUser;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
+};
+
+export type RefreshTokenResponse = {
+  accessToken: string;
+  refreshToken: string;
 };
