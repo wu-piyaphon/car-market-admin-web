@@ -3,5 +3,5 @@ pre-commit:
   commands:
     lint-staged:
       glob: "*.{js,jsx,ts,tsx}"
-      run: yarn eslint --fix {staged_files} && yarn prettier --write {staged_files}
+      run: yarn eslint --fix {staged_files} && yarn prettier --write {staged_files} && yarn tsc --noEmit
       stage_fixed: true
