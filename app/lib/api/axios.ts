@@ -122,31 +122,44 @@ axiosInstance.interceptors.response.use(
 
 export const api = {
   get: <T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> =>
-    axiosInstance.get<T>(url, config).then(res => res.data),
+    axiosInstance
+      .get<T>(url, config)
+      .then(res => res.data)
+      .catch(error => {
+        throw new Error(error.response.data.message);
+      }),
 
   post: <T = unknown>(
     url: string,
     data?: unknown,
     config?: AxiosRequestConfig
   ): Promise<T> =>
-    axiosInstance.post<T>(url, data, config).then(res => res.data),
+    axiosInstance
+      .post<T>(url, data, config)
+      .then(res => res.data)
+      .catch(error => {
+        throw new Error(error.response.data.message);
+      }),
 
   put: <T = unknown>(
     url: string,
     data?: unknown,
     config?: AxiosRequestConfig
   ): Promise<T> =>
-    axiosInstance.put<T>(url, data, config).then(res => res.data),
-
-  patch: <T = unknown>(
-    url: string,
-    data?: unknown,
-    config?: AxiosRequestConfig
-  ): Promise<T> =>
-    axiosInstance.patch<T>(url, data, config).then(res => res.data),
+    axiosInstance
+      .put<T>(url, data, config)
+      .then(res => res.data)
+      .catch(error => {
+        throw new Error(error.response.data.message);
+      }),
 
   delete: <T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> =>
-    axiosInstance.delete<T>(url, config).then(res => res.data),
+    axiosInstance
+      .delete<T>(url, config)
+      .then(res => res.data)
+      .catch(error => {
+        throw new Error(error.response.data.message);
+      }),
 };
 
 export default axiosInstance;

@@ -3,6 +3,7 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { Input } from "~/components/ui/input";
 import { Label } from "../ui/label";
+import HelperText from "./helper-text";
 
 // ----------------------------------------------------------------------
 
@@ -30,9 +31,7 @@ export default function RHFTextField({
           <>
             <Label htmlFor={name}>{label || name}</Label>
             <Input {...field} {...props} />
-            {error && (
-              <span className="text-sm text-red-500">{error.message}</span>
-            )}
+            {error && <HelperText state="error">{error.message}</HelperText>}
           </>
         );
       }}

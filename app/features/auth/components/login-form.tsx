@@ -8,6 +8,7 @@ import { cn } from "~/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type TLoginSchema } from "../schemas/login";
 import { useLoginMutation } from "../api/auth.mutations";
+import HelperText from "~/components/form/helper-text";
 
 // ----------------------------------------------------------------------
 
@@ -26,15 +27,19 @@ export default function LoginForm({
   });
 
   const {
+    setError,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = methods;
 
   const onSubmit = handleSubmit(async data => {
     try {
       await mutateAsync(data);
     } catch (error) {
-      console.error("Login failed:", error);
+      setError("root", {
+        type: "manual",
+        message: error instanceof Error ? error.message : "Login failed",
+      });
     }
   });
 
@@ -70,6 +75,12 @@ export default function LoginForm({
                 required
               />
             </div>
+
+            {errors.root && (
+              <HelperText state="error" className="mb-4">
+                {errors.root.message}
+              </HelperText>
+            )}
 
             <Button type="submit" className="w-full" loading={isSubmitting}>
               Login
