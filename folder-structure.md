@@ -245,34 +245,18 @@ export const useProfile = () =>
   });
 ```
 
+### 3. Query vs Mutation Organization
+
+```
+app/features/auth/api/
+├── auth.api.ts           # Raw API functions
+├── auth.queries.ts       # Query hooks (GET operations)
+└── auth.mutations.ts     # Mutation hooks (POST/PUT/DELETE)
+```
+
 ### 3. Recommended Structure Options
 
-#### Option A: Centralized API (Recommended for small-medium projects)
-
-```
-app/
-├── api/
-│   ├── client.ts                 # Base API client
-│   ├── endpoints.ts              # API endpoints
-│   ├── types.ts                  # Common API types
-│   ├── auth.api.ts               # Auth API functions
-│   ├── cars.api.ts               # Cars API functions
-│   └── users.api.ts              # Users API functions
-├── queries/
-│   ├── auth.queries.ts           # Auth Query hooks
-│   ├── cars.queries.ts           # Cars Query hooks
-│   └── users.queries.ts          # Users Query hooks
-├── lib/
-│   ├── react-query.ts            # Query client setup
-│   └── schemas/
-├── features/
-│   ├── auth/
-│   │   ├── components/
-│   │   ├── schemas/
-│   │   └── types/
-```
-
-#### Option B: Feature-based API (Recommended for large projects)
+#### Feature-based API (Recommended for large projects)
 
 ```
 app/
@@ -281,14 +265,15 @@ app/
 │   ├── endpoints.ts              # API endpoints
 │   └── types.ts                  # Common API types
 ├── lib/
-│   ├── react-query.ts            # Query client setup
+│   ├── query-client.ts            # Query client setup
 │   └── schemas/
 ├── features/
 │   ├── auth/
 │   │   ├── api/
 │   │   │   ├── index.ts          # Export auth API
 │   │   │   ├── auth.api.ts       # Auth API functions
-│   │   │   └── auth.queries.ts   # Auth Query hooks
+│   │   │   ├── auth.queries.ts   # Auth Query hooks
+│   │   │   └── auth.mutations.ts # Auth Mutation hooks
 │   │   ├── components/
 │   │   ├── schemas/
 │   │   └── types/
@@ -296,7 +281,8 @@ app/
 │   │   ├── api/
 │   │   │   ├── index.ts
 │   │   │   ├── cars.api.ts
-│   │   │   └── cars.queries.ts
+│   │   │   ├── cars.queries.ts
+│   │   │   └── cars.mutations.ts
 │   │   ├── components/
 │   │   ├── schemas/
 │   │   └── types/
@@ -361,7 +347,7 @@ export const carsApi = {
 **Query Hooks (`app/features/cars/api/cars.queries.ts`)**:
 
 ```typescript
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { carsApi } from "./cars.api";
 
 export const useCars = params =>
@@ -370,6 +356,20 @@ export const useCars = params =>
     queryFn: () => carsApi.getCars(params),
   });
 
+export const useCar = (id: string) =>
+  useQuery({
+    queryKey: ["cars", id],
+    queryFn: () => carsApi.getCar(id),
+    enabled: !!id,
+  });
+```
+
+**Mutation Hooks (`app/features/cars/api/cars.mutations.ts`)**:
+
+```typescript
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { carsApi } from "./cars.api";
+
 export const useCreateCar = () => {
   const queryClient = useQueryClient();
 
@@ -377,6 +377,86 @@ export const useCreateCar = () => {
     mutationFn: carsApi.createCar,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cars"] });
+    },
+  });
+};
+
+export const useUpdateCar = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }) => carsApi.updateCar(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: ["cars"] });
+      queryClient.invalidateQueries({ queryKey: ["cars", id] });
+    },
+  });
+};
+
+export const useDeleteCar = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: carsApi.deleteCar,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cars"] });
+    },
+  });
+};
+```
+
+### 6. Mutation Best Practices
+
+**Error Handling:**
+
+```typescript
+export const useCreateCar = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: carsApi.createCar,
+    onSuccess: data => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["cars"] });
+
+      // Or optimistically update
+      queryClient.setQueryData(["cars", data.id], data);
+    },
+    onError: error => {
+      // Handle error (toast, logging, etc.)
+      console.error("Failed to create car:", error);
+    },
+  });
+};
+```
+
+**Optimistic Updates:**
+
+```typescript
+export const useUpdateCar = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }) => carsApi.updateCar(id, data),
+    onMutate: async ({ id, data }) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["cars", id] });
+
+      // Snapshot previous value
+      const previousCar = queryClient.getQueryData(["cars", id]);
+
+      // Optimistically update
+      queryClient.setQueryData(["cars", id], old => ({ ...old, ...data }));
+
+      return { previousCar };
+    },
+    onError: (err, { id }, context) => {
+      // Rollback on error
+      queryClient.setQueryData(["cars", id], context.previousCar);
+    },
+    onSettled: (_, __, { id }) => {
+      // Always refetch after error or success
+      queryClient.invalidateQueries({ queryKey: ["cars", id] });
     },
   });
 };
@@ -391,4 +471,233 @@ See the following files for detailed examples:
 - `app/features/cars/schemas/car-form.ts` - Car management schema
 - `app/api/client.ts` - API client configuration
 - `app/features/auth/api/auth.queries.ts` - Auth TanStack Query hooks
+- `app/features/auth/api/auth.mutations.ts` - Auth TanStack Mutation hooks
 - `app/features/cars/api/cars.queries.ts` - Cars TanStack Query hooks
+- `app/features/cars/api/cars.mutations.ts` - Cars TanStack Mutation hooks
+
+### 7. Query Key Management
+
+Query keys are critical for caching, invalidation, and debugging. Here are the recommended approaches:
+
+#### Option 1: Co-located Query Keys (Recommended)
+
+Store query keys alongside your query hooks:
+
+```
+app/features/cars/api/
+├── cars.api.ts           # Raw API functions
+├── cars.keys.ts          # Query key factory
+├── cars.queries.ts       # Query hooks
+└── cars.mutations.ts     # Mutation hooks
+```
+
+**Query Key Factory (`app/features/cars/api/cars.keys.ts`)**:
+
+```typescript
+export const carsKeys = {
+  all: ["cars"] as const,
+  lists: () => [...carsKeys.all, "list"] as const,
+  list: (filters: string) => [...carsKeys.lists(), { filters }] as const,
+  details: () => [...carsKeys.all, "detail"] as const,
+  detail: (id: string) => [...carsKeys.details(), id] as const,
+  search: (query: string) => [...carsKeys.all, "search", query] as const,
+} as const;
+```
+
+**Usage in Queries (`app/features/cars/api/cars.queries.ts`)**:
+
+```typescript
+import { carsKeys } from "./cars.keys";
+
+export const useCars = (filters?: string) =>
+  useQuery({
+    queryKey: carsKeys.list(filters || ""),
+    queryFn: () => carsApi.getCars(filters),
+  });
+
+export const useCar = (id: string) =>
+  useQuery({
+    queryKey: carsKeys.detail(id),
+    queryFn: () => carsApi.getCar(id),
+    enabled: !!id,
+  });
+```
+
+**Usage in Mutations (`app/features/cars/api/cars.mutations.ts`)**:
+
+```typescript
+import { carsKeys } from "./cars.keys";
+
+export const useCreateCar = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: carsApi.createCar,
+    onSuccess: () => {
+      // Invalidate all car-related queries
+      queryClient.invalidateQueries({ queryKey: carsKeys.all });
+    },
+  });
+};
+
+export const useUpdateCar = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }) => carsApi.updateCar(id, data),
+    onSuccess: (_, { id }) => {
+      // Invalidate specific queries
+      queryClient.invalidateQueries({ queryKey: carsKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: carsKeys.detail(id) });
+    },
+  });
+};
+```
+
+#### Option 2: Centralized Query Keys
+
+For smaller projects, you can centralize all query keys:
+
+```
+app/lib/
+├── react-query.ts        # Query client setup
+├── query-keys.ts         # All query keys
+└── schemas/
+```
+
+**Centralized Keys (`app/lib/query-keys.ts`)**:
+
+```typescript
+export const queryKeys = {
+  auth: {
+    all: ["auth"] as const,
+    profile: () => [...queryKeys.auth.all, "profile"] as const,
+  },
+  cars: {
+    all: ["cars"] as const,
+    lists: () => [...queryKeys.cars.all, "list"] as const,
+    list: (filters: string) =>
+      [...queryKeys.cars.lists(), { filters }] as const,
+    details: () => [...queryKeys.cars.all, "detail"] as const,
+    detail: (id: string) => [...queryKeys.cars.details(), id] as const,
+  },
+  users: {
+    all: ["users"] as const,
+    lists: () => [...queryKeys.users.all, "list"] as const,
+    list: (filters: string) =>
+      [...queryKeys.users.lists(), { filters }] as const,
+    details: () => [...queryKeys.users.all, "detail"] as const,
+    detail: (id: string) => [...queryKeys.users.details(), id] as const,
+  },
+} as const;
+```
+
+#### Option 3: Global Query Key Factory
+
+Create a reusable factory pattern:
+
+```
+app/lib/
+├── react-query.ts        # Query client setup
+├── query-key-factory.ts  # Reusable factory
+└── schemas/
+```
+
+**Query Key Factory (`app/lib/query-key-factory.ts`)**:
+
+```typescript
+export const createQueryKeys = <T extends string>(feature: T) => ({
+  all: [feature] as const,
+  lists: () => [feature, "list"] as const,
+  list: (filters?: Record<string, any>) => [feature, "list", filters] as const,
+  details: () => [feature, "detail"] as const,
+  detail: (id: string | number) => [feature, "detail", id] as const,
+  search: (query: string) => [feature, "search", query] as const,
+});
+
+// Usage in feature files
+export const carsKeys = createQueryKeys("cars");
+export const usersKeys = createQueryKeys("users");
+export const authKeys = createQueryKeys("auth");
+```
+
+### 8. Query Key Best Practices
+
+#### 1. **Hierarchical Structure**
+
+```typescript
+// ✅ Good - Hierarchical and specific
+const carsKeys = {
+  all: ["cars"] as const,
+  lists: () => [...carsKeys.all, "list"] as const,
+  list: (filters: string) => [...carsKeys.lists(), { filters }] as const,
+  details: () => [...carsKeys.all, "detail"] as const,
+  detail: (id: string) => [...carsKeys.details(), id] as const,
+};
+
+// ❌ Bad - Flat and non-hierarchical
+const badKeys = {
+  cars: ["cars"],
+  carsList: ["cars-list"],
+  carDetail: (id: string) => ["car-detail", id],
+};
+```
+
+#### 2. **Consistent Invalidation**
+
+```typescript
+// ✅ Good - Precise invalidation
+queryClient.invalidateQueries({ queryKey: carsKeys.lists() }); // Only lists
+queryClient.invalidateQueries({ queryKey: carsKeys.detail(id) }); // Only specific detail
+queryClient.invalidateQueries({ queryKey: carsKeys.all }); // Everything car-related
+
+// ❌ Bad - Over-invalidation
+queryClient.invalidateQueries(); // Everything in cache
+```
+
+#### 3. **Type Safety**
+
+```typescript
+// ✅ Good - Strongly typed
+export const carsKeys = {
+  all: ["cars"] as const,
+  list: (filters: CarFilters) => [...carsKeys.all, "list", filters] as const,
+  detail: (id: string) => [...carsKeys.all, "detail", id] as const,
+} as const;
+
+// ❌ Bad - Untyped
+export const badKeys = {
+  all: ["cars"],
+  list: (filters: any) => ["cars", "list", filters],
+};
+```
+
+### 9. File Naming Conventions
+
+**For API organization:**
+
+- `*.api.ts` - Raw API functions (no React Query)
+- `*.keys.ts` - Query key factories (recommended)
+- `*.queries.ts` - Query hooks (useQuery, useInfiniteQuery)
+- `*.mutations.ts` - Mutation hooks (useMutation)
+- `*.subscriptions.ts` - WebSocket/SSE hooks (optional)
+
+**For combined approach:**
+
+- `*.api.ts` - Raw API functions
+- `*.keys.ts` - Query key factories
+- `*.hooks.ts` - All React Query hooks (queries + mutations)
+
+**For centralized approach:**
+
+- `app/lib/query-keys.ts` - All query keys
+- `app/lib/query-key-factory.ts` - Reusable factory
+
+This structure ensures clear separation between:
+
+- **Queries**: Read operations that fetch and cache data
+- **Mutations**: Write operations that modify server state
+- **API functions**: Pure functions that make HTTP requests
+- **Query Keys**: Consistent cache management and invalidation
+
+Choose the approach that best fits your team size and project complexity!
