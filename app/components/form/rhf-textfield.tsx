@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 import { Input } from "~/components/ui/input";
 import { Label } from "../ui/label";
@@ -19,15 +19,23 @@ export default function RHFTextField({
   label,
   ...props
 }: RHFTextFieldProps) {
+  const { control } = useFormContext();
+
   return (
     <Controller
+      control={control}
       name={name}
-      render={({ field }) => (
-        <>
-          <Label htmlFor={label}>{name}</Label>
-          <Input {...field} {...props} />
-        </>
-      )}
+      render={({ field, fieldState: { error } }) => {
+        return (
+          <>
+            <Label htmlFor={name}>{label || name}</Label>
+            <Input {...field} {...props} />
+            {error && (
+              <span className="text-sm text-red-500">{error.message}</span>
+            )}
+          </>
+        );
+      }}
     />
   );
 }

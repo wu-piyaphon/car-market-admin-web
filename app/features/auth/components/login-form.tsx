@@ -5,12 +5,17 @@ import Form from "~/components/form/form";
 import RHFTextField from "~/components/form/rhf-textfield";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type TLoginSchema } from "../schemas/login";
+
+// ----------------------------------------------------------------------
 
 export default function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const methods = useForm({
+  const methods = useForm<TLoginSchema>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
