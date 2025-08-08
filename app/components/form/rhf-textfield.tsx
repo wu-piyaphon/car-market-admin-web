@@ -29,7 +29,7 @@ export default function RHFTextField({
       render={({ field, fieldState: { error } }) => {
         return (
           <>
-            <Label htmlFor={name}>{label || name}</Label>
+            <Label htmlFor={name}>{label}</Label>
             <Input {...field} {...props} />
             {error && <HelperText state="error">{error.message}</HelperText>}
           </>
