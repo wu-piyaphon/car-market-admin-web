@@ -91,6 +91,11 @@ html {
 
 :root {
   --radius: 0.625rem;
+  --breakpoint-xs: 0px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1025px;
+
   --background: oklch(100% 0.00011 271.152);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
