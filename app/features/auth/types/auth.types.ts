@@ -1,7 +1,8 @@
 export type AuthUser = {
   id: string;
   email: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   role: "user" | "admin";
 };
 
