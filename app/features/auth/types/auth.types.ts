@@ -5,11 +5,12 @@ export type AuthUser = {
   role: "user" | "admin";
 };
 
-export type AuthContextType = {
+export interface AuthContextValue {
   user: AuthUser | null;
+  loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-};
+  logout: () => void;
+}
 
 export type AuthError = {
   message: string;
@@ -22,12 +23,11 @@ export type AuthCredentials = {
 };
 
 export type AuthLoginResponse = {
-  user: AuthUser;
-  accessToken: string;
-  refreshToken: string;
+  access_token: string;
+  refresh_token: string;
 };
 
 export type RefreshTokenResponse = {
-  accessToken: string;
-  refreshToken: string;
+  access_token: string;
+  refresh_token: string;
 };

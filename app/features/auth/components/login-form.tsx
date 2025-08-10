@@ -7,8 +7,9 @@ import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type TLoginSchema } from "../schemas/login";
-import { useLoginMutation } from "../api/auth.mutations";
 import HelperText from "~/components/form/helper-text";
+import { useAuthContext } from "../context/auth-context";
+import { toast } from "sonner";
 
 // ----------------------------------------------------------------------
 
@@ -16,7 +17,7 @@ export default function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const { mutateAsync } = useLoginMutation();
+  const { login } = useAuthContext();
 
   const methods = useForm<TLoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -27,18 +28,17 @@ export default function LoginForm({
   });
 
   const {
-    setError,
     handleSubmit,
     formState: { isSubmitting, errors },
   } = methods;
 
   const onSubmit = handleSubmit(async data => {
     try {
-      await mutateAsync(data);
+      await login(data.email, data.password);
     } catch (error) {
-      setError("root", {
-        type: "manual",
-        message: error instanceof Error ? error.message : "Login failed",
+      toast.error("Login failed!", {
+        description:
+          error instanceof Error ? error.message : "Please try again later",
       });
     }
   });

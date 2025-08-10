@@ -14,6 +14,7 @@ import { ModeToggle } from "./components/mode-toggle";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/query-client";
 import { Toaster } from "./components/ui/sonner";
+import { AuthProvider } from "./features/auth/context/auth-context";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -49,11 +50,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <ModeToggle />
-        <Toaster />
-        <Outlet />
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <ModeToggle />
+          <Toaster />
+          <Outlet />
+        </ThemeProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
