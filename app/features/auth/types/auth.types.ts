@@ -7,6 +7,7 @@ export type AuthUser = {
 
 export interface AuthContextValue {
   user: AuthUser | null;
+  authenticated: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;

@@ -3,25 +3,31 @@ import { Outlet } from "react-router";
 import { useAuthContext } from "~/features/auth/context/auth-context";
 import { useRouter } from "~/hooks/use-router";
 
-export default function AuthLayout() {
+export default function DashboardLayout() {
   const router = useRouter();
-  const { authenticated } = useAuthContext();
+  const { authenticated, loading } = useAuthContext();
 
   // ----------------------------------------------------------------------
 
   useEffect(() => {
-    if (authenticated) {
-      router.replace("/dashboard");
+    if (!authenticated && !loading) {
+      router.replace("/");
     }
-  }, [authenticated, router]);
+  }, [authenticated, loading, router]);
 
   // ----------------------------------------------------------------------
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!authenticated) {
+    return null;
+  }
+
   return (
-    <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <Outlet />
-      </div>
+    <div>
+      db layout <Outlet />
     </div>
   );
 }
