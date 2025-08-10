@@ -2,6 +2,9 @@ import { useEffect } from "react";
 import { Outlet } from "react-router";
 import { useAuthContext } from "~/features/auth/context/auth-context";
 import { useRouter } from "~/hooks/use-router";
+import { SidebarProvider } from "../ui/sidebar";
+import AppSidebar from "./app-sidebar";
+import AppTopbar from "./app-topbar";
 
 export default function DashboardLayout() {
   const router = useRouter();
@@ -26,8 +29,14 @@ export default function DashboardLayout() {
   }
 
   return (
-    <div>
-      db layout <Outlet />
-    </div>
+    <SidebarProvider>
+      <AppSidebar />
+      <main className="flex w-full flex-col">
+        <AppTopbar />
+        <div className="p-4">
+          <Outlet />
+        </div>
+      </main>
+    </SidebarProvider>
   );
 }
