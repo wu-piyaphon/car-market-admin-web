@@ -19,8 +19,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // ----------------------------------------------------------------------
-
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
@@ -61,9 +59,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // ----------------------------------------------------------------------
+
   useEffect(() => {
     initialize();
   }, []);
+
+  // ----------------------------------------------------------------------
 
   return (
     <AuthContext.Provider

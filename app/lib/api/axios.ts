@@ -7,6 +7,7 @@ import type {
 } from "axios";
 import { tokenManager } from "./token-manager";
 import type { TQueue } from "./types/axios.types";
+import { endpoints } from "./endpoints";
 
 // ----------------------------------------------------------------------
 
@@ -85,14 +86,17 @@ axiosInstance.interceptors.response.use(
       if (!refreshToken) {
         tokenManager.clearTokens();
         processQueue(error);
-        window.location.href = "/login";
+        window.location.href = "/";
         return Promise.reject(error);
       }
 
       try {
-        const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
-          refreshToken,
-        });
+        const response = await axios.post(
+          `${API_BASE_URL}${endpoints.auth.refresh}`,
+          {
+            refreshToken,
+          }
+        );
 
         const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
           response.data;
@@ -106,7 +110,7 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         tokenManager.clearTokens();
         processQueue(refreshError);
-        window.location.href = "/login";
+        window.location.href = "/";
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
