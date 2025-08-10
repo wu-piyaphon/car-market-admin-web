@@ -98,7 +98,7 @@ axiosInstance.interceptors.response.use(
           }
         );
 
-        const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+        const { access_token: newAccessToken, refresh_token: newRefreshToken } =
           response.data;
 
         tokenManager.setTokens(newAccessToken, newRefreshToken);
