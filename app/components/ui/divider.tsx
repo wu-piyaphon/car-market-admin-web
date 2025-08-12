@@ -1,5 +1,10 @@
 import React from "react";
+import { cn } from "~/lib/utils";
 
-export default function Divider() {
-  return <div className="border-border my-2 border-b" />;
+type Props = React.HTMLProps<HTMLDivElement>;
+
+export default function Divider({ className, ...props }: Props) {
+  return (
+    <div className={cn("border-border my-2 border-b", className)} {...props} />
+  );
 }

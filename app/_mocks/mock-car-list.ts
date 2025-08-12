@@ -1,0 +1,21 @@
+import type { Car } from "~/features/car/types/car.types";
+
+export const CAR_LIST: Car[] = [
+  {
+    id: "78d442f1-ac51-4419-8d40-581ca796d8fa",
+    brand: "BMW",
+    type: "SUV",
+    transmission: "AUTOMATIC",
+    category: null,
+    thumbnail:
+      "https://media.ed.edmunds-media.com/mercedes-benz/s-class/2025/oem/2025_mercedes-benz_s-class_sedan_amg-s-63-e-performance_fq_oem_1_815.jpg",
+    model: "W-Model",
+    subModel: "MW25",
+    modelYear: 2025,
+    price: "4000000.00",
+    previousLicensePlate: "กข 0001",
+    currentLicensePlate: "ขค 0001",
+    isActive: true,
+    slug: "bmw-w-model-mw25-2025-1753704321566",
+  },
+];

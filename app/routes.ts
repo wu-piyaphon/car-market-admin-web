@@ -11,7 +11,7 @@ export default [
 
   ...prefix("dashboard", [
     layout("./components/layout/dashboard-layout.tsx", [
-      index("./routes/dashboard.tsx"),
+      index("./routes/owner-car-list.tsx"),
     ]),
   ]),
 
