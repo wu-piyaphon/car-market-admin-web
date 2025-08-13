@@ -14,7 +14,7 @@ export function fTitleCase(str: string): string {
   return str
     .toLowerCase()
     .split(" ")
-    .map((word) => fCapitalize(word))
+    .map(word => fCapitalize(word))
     .join(" ");
 }
 
@@ -76,17 +76,12 @@ export function fSlugify(str: string): string {
 /**
  * Formats currency amount
  */
-export function fCurrency(
-  amount: number | string,
-  currency = "USD",
-  locale = "en-US",
-): string {
+export function fCurrency(amount: number | string, locale = "en-US"): string {
   const num = typeof amount === "string" ? parseFloat(amount) : amount;
   if (isNaN(num)) return "0";
 
   return new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency,
+    maximumFractionDigits: 0,
   }).format(num);
 }
 
@@ -100,7 +95,7 @@ export function fDate(
     month: "short",
     day: "numeric",
   },
-  locale = "en-US",
+  locale = "en-US"
 ): string {
   const dateObj = new Date(date);
   if (isNaN(dateObj.getTime())) return "Invalid Date";
@@ -115,7 +110,7 @@ export function fPadString(
   str: string,
   length: number,
   padChar = " ",
-  padStart = true,
+  padStart = true
 ): string {
   if (str.length >= length) return str;
   const padding = padChar.repeat(length - str.length);

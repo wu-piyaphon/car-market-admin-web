@@ -13,9 +13,11 @@ export default function CarListOwnerView() {
     <div>
       <h1>รายการรถแชมป์</h1>
       <CarListSearch onSearch={handleSearch} />
-      {CAR_LIST.map(car => (
-        <CarListCard key={car.id} {...car} />
-      ))}
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {CAR_LIST.map(data => (
+          <CarListCard key={data.id} data={data} />
+        ))}
+      </div>
     </div>
   );
 }

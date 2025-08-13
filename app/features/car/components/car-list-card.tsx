@@ -1,22 +1,21 @@
 import { Button } from "~/components/ui/button";
 import type { Car } from "../types/car.types";
 import Divider from "~/components/ui/divider";
+import { fCurrency } from "~/utils/format-string";
+import { Switch } from "~/components/ui/switch";
+import { useState } from "react";
+import { useRouter } from "~/hooks/use-router";
+import { paths } from "~/lib/paths";
 
 // ----------------------------------------------------------------------
 
-type Props = Car & {
-  onEdit?: () => void;
-  onDetail?: () => void;
-};
-
-const STATUS_MAP = {
-  active: { label: "แสดง", color: "#4CAF50" },
-  inactive: { label: "ซ่อน", color: "#BDBDBD" },
+type Props = {
+  data: Car;
 };
 
 // ----------------------------------------------------------------------
 
-export default function CarListCard({ onEdit, onDetail, ...car }: Props) {
+export default function CarListCard({ data }: Props) {
   const {
     subModel,
     modelYear,
@@ -26,60 +25,60 @@ export default function CarListCard({ onEdit, onDetail, ...car }: Props) {
     currentLicensePlate,
     type,
     isActive,
-  } = car;
+  } = data;
 
-  const statusInfo = STATUS_MAP[isActive ? "active" : "inactive"];
+  const router = useRouter();
+
+  const [checked, setChecked] = useState(isActive);
+
+  const onToggleActive = (checked: boolean) => {
+    setChecked(checked);
+  };
+
+  const onClickDetail = () => {
+    router.push(paths.car.detail(data.id));
+  };
+
+  const onClickEdit = () => {
+    router.push(paths.car.edit(data.id));
+  };
+
   return (
-    <div className="bg-background relative flex max-w-[320px] flex-col rounded-md shadow-lg">
+    <div className="bg-background relative flex h-full w-full flex-col rounded-md shadow-lg">
       <div className="relative">
         <img
           src={thumbnail}
           alt={model}
-          className="h-[180px] w-full rounded-t-md object-cover"
+          className="h-[120px] w-full rounded-t-md object-cover md:h-[220px]"
         />
-        <div
-          style={{
-            position: "absolute",
-            top: 16,
-            right: 16,
-            background:
-              status === "active"
-                ? "#E8F5E9"
-                : status === "sold"
-                  ? "#F5F5F5"
-                  : "#F5F5F5",
-            color: statusInfo.color,
-            borderRadius: 16,
-            padding: "2px 16px",
-            fontWeight: 600,
-            fontSize: 14,
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          {statusInfo.label}
-        </div>
       </div>
 
       {/* -- Info -- */}
-      <div className="flex flex-col px-5 py-4">
-        <p className="text-lg">
-          {modelYear} {model} {subModel}
-        </p>
-        <p className="text-lg font-semibold">{price} บาท</p>
-        <div className="flex gap-4 text-sm text-gray-500">
-          <span>ทะเบียน : {currentLicensePlate}</span>
-          <span>ประเภท: {type}</span>
+      <div className="flex h-full flex-col px-5 py-4">
+        <div className="flex flex-row justify-between">
+          <p className="text-md">
+            {modelYear} {model} {subModel}
+          </p>
+          <Switch
+            label={checked ? "แสดง" : "ซ่อน"}
+            checked={checked}
+            onCheckedChange={onToggleActive}
+          />
+        </div>
+        <p className="text-lg font-semibold">{fCurrency(price)} บาท</p>
+        <div className="flex gap-2 text-sm text-wrap text-gray-500">
+          <p className="flex-1">ทะเบียน : {currentLicensePlate}</p>
+          <p className="flex-1">ประเภท: {type}</p>
         </div>
 
         <Divider className="my-3" />
 
         {/* -- Action -- */}
-        <div className="flex flex-row gap-2">
-          <Button size="lg" className="flex-1" onClick={onDetail}>
+        <div className="flex flex-col gap-2 md:flex-row">
+          <Button size="lg" className="flex-1" onClick={onClickDetail}>
             ดูรายละเอียด
           </Button>
-          <Button size="lg" className="flex-1" onClick={onEdit}>
+          <Button size="lg" className="flex-1" onClick={onClickEdit}>
             แก้ไข
           </Button>
         </div>
