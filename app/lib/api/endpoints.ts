@@ -4,4 +4,8 @@ export const endpoints = {
     refresh: "/auth/refresh",
     me: "/auth/me",
   },
+  car: {
+    list: "/cars",
+    detail: (id: string) => `/cars/${id}`,
+  },
 };

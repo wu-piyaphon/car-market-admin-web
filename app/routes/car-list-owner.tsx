@@ -7,6 +7,6 @@ export function meta() {
   ];
 }
 
-export default function OwnerCarList() {
+export default function CarListOwner() {
   return <CarListOwnerView />;
 }

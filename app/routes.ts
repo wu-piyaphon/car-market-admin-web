@@ -11,7 +11,11 @@ export default [
 
   ...prefix("dashboard", [
     layout("./components/layout/dashboard-layout.tsx", [
-      index("./routes/owner-car-list.tsx"),
+      ...prefix("cars", [
+        route("list-owner", "./routes/car-list-owner.tsx"),
+        route("create", "./routes/car-create.tsx"),
+        route("detail", "./routes/car-detail.tsx"),
+      ]),
     ]),
   ]),
 

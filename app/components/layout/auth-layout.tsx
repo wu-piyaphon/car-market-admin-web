@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Outlet } from "react-router";
 import { useAuthContext } from "~/features/auth/context/auth-context";
 import { useRouter } from "~/hooks/use-router";
+import { paths } from "~/lib/paths";
 
 export default function AuthLayout() {
   const router = useRouter();
@@ -11,7 +12,7 @@ export default function AuthLayout() {
 
   useEffect(() => {
     if (authenticated) {
-      router.replace("/dashboard");
+      router.replace(paths.cars.list.owner);
     }
   }, [authenticated, router]);
 

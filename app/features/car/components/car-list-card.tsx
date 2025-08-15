@@ -36,11 +36,11 @@ export default function CarListCard({ data }: Props) {
   };
 
   const onClickDetail = () => {
-    router.push(paths.car.detail(data.id));
+    router.push(paths.cars.detail(data.id));
   };
 
   const onClickEdit = () => {
-    router.push(paths.car.edit(data.id));
+    router.push(paths.cars.edit(data.id));
   };
 
   return (

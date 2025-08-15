@@ -1,3 +1,5 @@
+import type { Pagination } from "~/types/common";
+
 export type Car = {
   id: string;
   brand: string;
@@ -14,3 +16,5 @@ export type Car = {
   isActive: boolean;
   slug: string;
 };
+
+export type CarPagination = Pagination<Car>;

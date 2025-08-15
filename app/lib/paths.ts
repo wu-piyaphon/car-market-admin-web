@@ -1,7 +1,11 @@
 export const paths = {
-  car: {
-    list: "/car",
-    detail: (id: string) => `/car/${id}`,
-    edit: (id: string) => `/car/${id}/edit`,
+  cars: {
+    list: {
+      owner: "/dashboard/cars/list-owner",
+      consignment: "/dashboard/cars/list-consignment",
+    },
+    create: "/dashboard/cars/create",
+    detail: (id: string) => `/dashboard/cars/detail/${id}`,
+    edit: (id: string) => `/dashboard/cars/edit/${id}`,
   },
 } as const;
