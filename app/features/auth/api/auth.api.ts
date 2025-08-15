@@ -7,7 +7,7 @@ import type {
   RefreshTokenResponse,
 } from "../types/auth.types";
 
-export const authApi = {
+export const AUTH_API = {
   login: (credentials: AuthCredentials): Promise<AuthLoginResponse> => {
     return api.post<AuthLoginResponse>(endpoints.auth.login, credentials);
   },

@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import { tokenManager } from "~/lib/api/token-manager";
-import { authApi } from "../api/auth.api";
+import { AUTH_API } from "../api/auth.api";
 import type { AuthContextValue, AuthUser } from "../types/auth.types";
 import { useGetMeMutation } from "../api/auth.mutations";
 import { toast } from "sonner";
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const { access_token, refresh_token } = await authApi.login({
+      const { access_token, refresh_token } = await AUTH_API.login({
         email,
         password,
       });
