@@ -20,13 +20,14 @@ type RHFTextFieldProps = React.ComponentProps<"input"> & {
 export default function RHFTextField({
   name,
   label,
+  type,
   thousandSeparator = false,
   ...props
 }: RHFTextFieldProps) {
   const { control } = useFormContext();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (props.type === "number" && ["e", "E", "-", "+"].includes(e.key)) {
+    if (type === "number" && ["e", "E", "-", "+"].includes(e.key)) {
       e.preventDefault();
     }
   };
@@ -36,8 +37,15 @@ export default function RHFTextField({
     if (!value) return value;
     // Remove existing commas and non-digit characters except decimal point
     const cleanValue = value.replace(/[^\d.]/g, "");
-    // Split by decimal point
+    // Ensure only one decimal point
     const parts = cleanValue.split(".");
+    if (parts.length > 2) {
+      // If multiple decimal points, keep only the first one
+      const [integer, ...decimals] = parts;
+      parts[0] = integer;
+      parts[1] = decimals.join("");
+      parts.length = 2;
+    }
     // Add commas to integer part
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     // Join back with decimal point if it exists
@@ -55,9 +63,18 @@ export default function RHFTextField({
       name={name}
       render={({ field, fieldState: { error } }) => {
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-          const value = e.target.value;
+          let value = e.target.value;
 
           if (thousandSeparator) {
+            // When thousandSeparator is true, only allow numbers and decimal point
+            value = value.replace(/[^\d.]/g, "");
+
+            // Ensure only one decimal point
+            const parts = value.split(".");
+            if (parts.length > 2) {
+              value = parts[0] + "." + parts.slice(1).join("");
+            }
+
             // Format display value with commas
             const formattedValue = formatNumberWithCommas(value);
             e.target.value = formattedValue;
@@ -65,7 +82,7 @@ export default function RHFTextField({
             // Send clean value (without commas) to form state
             field.onChange(removeCommas(value));
           } else {
-            field.onChange(value);
+            field.onChange(type === "number" ? Number(value) : value);
           }
         };
 
@@ -82,8 +99,9 @@ export default function RHFTextField({
               {...props}
               value={displayValue || ""}
               onChange={handleChange}
+              type={type}
               className={cn(
-                props.type === "number" &&
+                type === "number" &&
                   "[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
                 props.className
               )}

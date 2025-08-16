@@ -1,37 +1,22 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Form from "~/components/form/form";
 import RHFTextField from "~/components/form/rhf-textfield";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "~/hooks/use-router";
 import { paths } from "~/lib/paths";
-import {
-  carListSearchSchema,
-  type CarListSearchSchema,
-} from "../schemas/car-list-search";
+import { type CarListSearchSchema } from "../schemas/car-list-search";
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  onSearch: (data: CarListSearchSchema) => void;
+type CarListSearchProps = {
+  methods: ReturnType<typeof useForm<CarListSearchSchema>>;
 };
 
-// ----------------------------------------------------------------------
-
-export default function CarListSearch({ onSearch }: Props) {
+export default function CarListSearch({ methods }: CarListSearchProps) {
   const router = useRouter();
 
-  const methods = useForm<CarListSearchSchema>({
-    resolver: zodResolver(carListSearchSchema),
-    defaultValues: {
-      keyword: "",
-    },
-  });
-
-  const { handleSubmit } = methods;
-
   return (
-    <Form methods={methods} onSubmit={handleSubmit(onSearch)}>
+    <Form methods={methods}>
       <div className="mb-4 flex items-center gap-2">
         <RHFTextField
           name="keyword"
@@ -39,6 +24,7 @@ export default function CarListSearch({ onSearch }: Props) {
         />
 
         <Button
+          type="button"
           onClick={() => router.push(paths.cars.create)}
           className="hidden w-36 md:block"
         >

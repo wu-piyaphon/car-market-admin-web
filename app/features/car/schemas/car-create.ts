@@ -17,8 +17,8 @@ export const carCreateSchema = z.object({
   transmission: z.string().min(1, "กรุณาเลือกระบบเกียร์"),
   color: z.string().min(1, "กรุณาระบุสีรถ"),
   engineType: z.string().min(1, "กรุณาระบุประเภทเครื่องยนต์"),
-  engineCapacity: z.string().min(1, "กรุณาระบุขนาดเครื่องยนต์"),
-  mileage: z.string().min(1, "กรุณาระบุระยะทางที่ใช้แล้ว"),
+  engineCapacity: z.number().min(1, "กรุณาระบุขนาดเครื่องยนต์"),
+  mileage: z.string().optional(),
   price: z.string().min(1, "กรุณาระบุราคา"),
 
   // License Information

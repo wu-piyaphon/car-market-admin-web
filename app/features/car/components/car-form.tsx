@@ -8,7 +8,12 @@ export function CarFormRow({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col gap-4 md:flex-row", className)}>
+    <div
+      className={cn(
+        "grid grid-cols-1 items-start gap-4 md:grid-cols-2",
+        className
+      )}
+    >
       {children}
     </div>
   );

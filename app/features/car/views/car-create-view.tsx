@@ -35,7 +35,7 @@ export default function CarCreateView() {
       transmission: "",
       color: "",
       engineType: "",
-      engineCapacity: "",
+      engineCapacity: 0,
       mileage: "",
       price: "",
       previousLicensePlate: "",
@@ -135,10 +135,16 @@ export default function CarCreateView() {
                 </CarFormRow>
 
                 <CarFormRow>
-                  <RHFTextField name="engineSize" label="ขนาดเครื่องยนต์ CC" />
+                  <RHFTextField
+                    name="engineCapacity"
+                    label="ขนาดเครื่องยนต์ (CC)"
+                    placeholder="เช่น 500"
+                    type="number"
+                  />
                   <RHFTextField
                     name="mileage"
                     label="เลขไมล์ (ไม่จำเป็น)"
+                    placeholder="เช่น 10,000"
                     thousandSeparator
                   />
                 </CarFormRow>
@@ -147,6 +153,7 @@ export default function CarCreateView() {
                   <RHFTextField
                     name="price"
                     label="ราคา (บาท)"
+                    placeholder="เช่น 100,000"
                     thousandSeparator
                   />
                 </CarFormRow>

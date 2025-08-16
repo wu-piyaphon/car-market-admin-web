@@ -18,3 +18,7 @@ export type Car = {
 };
 
 export type CarPagination = Pagination<Car>;
+
+export type CarListSearchQuery = {
+  keyword?: string;
+};

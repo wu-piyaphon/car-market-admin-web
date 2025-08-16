@@ -1,11 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // ----------------------------------------------------------------------
-
-export type UseDebounceReturn<T> = {
-  debouncedValue: T;
-  isDebouncing: boolean;
-};
 
 // ----------------------------------------------------------------------
 
@@ -15,10 +10,7 @@ export type UseDebounceReturn<T> = {
  * @param delay - The delay in milliseconds (default: 500ms)
  * @returns Object containing debouncedValue and isDebouncing state
  */
-export function useDebounce<T>(
-  value: T,
-  delay: number = 500,
-): UseDebounceReturn<T> {
+export function useDebounce<T>(value: T, delay: number = 500): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
   const [isDebouncing, setIsDebouncing] = useState<boolean>(false);
 
@@ -34,13 +26,7 @@ export function useDebounce<T>(
     };
   }, [value, delay]);
 
-  return useMemo(
-    () => ({
-      debouncedValue,
-      isDebouncing,
-    }),
-    [debouncedValue, isDebouncing],
-  );
+  return useMemo(() => debouncedValue, [debouncedValue, isDebouncing]);
 }
 
 // ----------------------------------------------------------------------
@@ -53,10 +39,10 @@ export function useDebounce<T>(
  */
 export function useDebouncedCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
-  delay: number = 500,
+  delay: number = 500
 ): T {
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
-    null,
+    null
   );
 
   const debouncedCallback = useMemo(() => {
