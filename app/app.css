@@ -18,21 +18,21 @@
 @font-face {
   font-family: "LINESeedSansTH";
   src: url("/fonts/LINESeedSansTH_W_Bd.woff2") format("woff2");
-  font-weight: 700;
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "LINESeedSansTH";
   src: url("/fonts/LINESeedSansTH_W_XBd.woff2") format("woff2");
-  font-weight: 800;
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "LINESeedSansTH";
   src: url("/fonts/LINESeedSansTH_W_He.woff2") format("woff2");
-  font-weight: 500;
+  font-weight: 800;
   font-style: normal;
   font-display: swap;
 }

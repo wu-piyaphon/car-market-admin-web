@@ -1,5 +1,8 @@
+import { Link, useLocation } from "react-router";
 import { useAuthContext } from "~/features/auth/context/auth-context";
+import { paths } from "~/lib/paths";
 import { Button } from "../ui/button";
+import Divider from "../ui/divider";
 import {
   Sidebar,
   SidebarContent,
@@ -12,7 +15,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import Divider from "../ui/divider";
 
 // ----------------------------------------------------------------------
 
@@ -23,11 +25,11 @@ const MENU = [
     children: [
       {
         title: "รถแชมป์",
-        url: "#",
+        url: paths.cars.owner.list,
       },
       {
         title: "รถฝากขาย",
-        url: "#",
+        url: paths.cars.consignment.list,
       },
     ],
   },
@@ -55,6 +57,12 @@ const MENU = [
 
 export default function AppSidebar() {
   const { logout } = useAuthContext();
+  const location = useLocation();
+
+  const isActiveMenuItem = (url: string) => {
+    if (url === "#") return false;
+    return location.pathname === url || location.pathname.startsWith(url + "/");
+  };
 
   return (
     <Sidebar>
@@ -67,15 +75,24 @@ export default function AppSidebar() {
             <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {group.children.map(item => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.url}>
-                        <span>{item.title}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {group.children.map(item => {
+                  const isActive = isActiveMenuItem(item.url);
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild isActive={isActive}>
+                        {item.url === "#" ? (
+                          <span>
+                            <span>{item.title}</span>
+                          </span>
+                        ) : (
+                          <Link to={item.url}>
+                            <span>{item.title}</span>
+                          </Link>
+                        )}
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
