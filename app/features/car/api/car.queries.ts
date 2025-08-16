@@ -15,3 +15,21 @@ export const useGetCarDetail = (id: string) =>
     queryFn: () => CAR_API.detail(id),
     enabled: !!id,
   });
+
+export const useGetBrands = () =>
+  useQuery({
+    queryKey: CAR_KEYS.brands(),
+    queryFn: () => CAR_API.brands(),
+  });
+
+export const useGetCategories = () =>
+  useQuery({
+    queryKey: CAR_KEYS.categories(),
+    queryFn: () => CAR_API.categories(),
+  });
+
+export const useGetTypes = () =>
+  useQuery({
+    queryKey: CAR_KEYS.types(),
+    queryFn: () => CAR_API.types(),
+  });

@@ -12,7 +12,7 @@ export default function AuthLayout() {
 
   useEffect(() => {
     if (authenticated) {
-      router.replace(paths.cars.list.owner);
+      router.replace(paths.cars.owner.list);
     }
   }, [authenticated, router]);
 

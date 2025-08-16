@@ -5,12 +5,19 @@ import RHFFileUpload from "~/components/form/rhf-file-upload";
 import RHFTextField from "~/components/form/rhf-textfield";
 import { Button } from "~/components/ui/button";
 
-import { CAR_BRANDS, CAR_TYPES } from "~/_mocks/mock-car-options";
+import { useLocation } from "react-router";
+import { toast } from "sonner";
 import Form from "~/components/form/form";
 import RHFAutocomplete from "~/components/form/rhf-autocomplete";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { useRouter } from "~/hooks/use-router";
 import { paths } from "~/lib/paths";
+import { useCreateCarMutation } from "../api/car.mutations";
+import {
+  useGetBrands,
+  useGetCategories,
+  useGetTypes,
+} from "../api/car.queries";
 import { CarFormRow } from "../components/car-form";
 import CarHeader from "../components/car-header";
 import {
@@ -19,9 +26,18 @@ import {
   CAR_TRANSMISSION_OPTIONS,
 } from "../constants/car-options";
 import { carCreateSchema, type CarCreateSchema } from "../schemas/car-create";
+import { getCarSalesType } from "../utils";
 
 export default function CarCreateView() {
   const router = useRouter();
+  const location = useLocation();
+
+  const salesType = getCarSalesType(location);
+
+  const { mutateAsync: createCar } = useCreateCarMutation();
+  const { data: brands = [] } = useGetBrands();
+  const { data: categories = [] } = useGetCategories();
+  const { data: types = [] } = useGetTypes();
 
   const methods = useForm<CarCreateSchema>({
     resolver: zodResolver(carCreateSchema),
@@ -39,24 +55,65 @@ export default function CarCreateView() {
       mileage: "",
       price: "",
       previousLicensePlate: "",
-      currentLicensePlate: "",
+      newLicensePlate: "",
       files: [],
     },
   });
 
   const {
+    reset,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
+  const onClickBack = () => {
+    if (salesType === "OWNER") {
+      router.push(paths.cars.owner.list);
+    } else {
+      router.push(paths.cars.consignment.list);
+    }
+  };
+
   const onSubmit = async (data: CarCreateSchema) => {
     try {
-      console.log("Form Data:", data);
-      // TODO: Implement API call to create car
-      alert("ข้อมูลถูกบันทึกแล้ว (ดูใน Console)");
+      const formData = new FormData();
+      formData.append("typeId", data.typeId);
+      formData.append("brandId", data.brandId);
+      if (data.categoryId) {
+        formData.append("categoryId", data.categoryId);
+      }
+      formData.append("model", data.model);
+      formData.append("subModel", data.subModel);
+      formData.append("modelYear", data.modelYear.toString());
+      formData.append("transmission", data.transmission);
+      formData.append("color", data.color);
+      formData.append("engineType", data.engineType);
+      formData.append("engineCapacity", data.engineCapacity.toString());
+      if (data.mileage) {
+        formData.append("mileage", data.mileage);
+      }
+      formData.append("price", data.price);
+      if (data.previousLicensePlate) {
+        formData.append("previousLicensePlate", data.previousLicensePlate);
+      }
+      formData.append("newLicensePlate", data.newLicensePlate);
+      data.files.forEach(file => {
+        formData.append("files", file);
+      });
+      formData.append("salesType", salesType);
+
+      await createCar(formData);
+      reset();
+
+      toast.success("สำเร็จ", {
+        description: "เพิ่มรถใหม่เรียบร้อยแล้ว",
+      });
     } catch (error) {
       console.error("Error creating car:", error);
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      toast.error("เกิดข้อผิดพลาด", {
+        description:
+          error instanceof Error ? error.message : "ไม่สามารถเพิ่มรถใหม่ได้",
+      });
     }
   };
 
@@ -65,9 +122,7 @@ export default function CarCreateView() {
       <CarHeader
         title="เพิ่มรถใหม่"
         description="กรอกข้อมูลของรถที่คุณต้องการเพิ่ม"
-        onClick={() => {
-          router.push(paths.cars.list.owner);
-        }}
+        onClick={onClickBack}
       />
 
       <Form methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -84,12 +139,12 @@ export default function CarCreateView() {
                   <RHFAutocomplete
                     name="typeId"
                     label="ประเภทรถ"
-                    options={CAR_TYPES}
+                    options={types}
                   />
                   <RHFAutocomplete
                     name="brandId"
                     label="ยี่ห้อ"
-                    options={CAR_BRANDS}
+                    options={brands}
                   />
                 </CarFormRow>
 
@@ -143,7 +198,7 @@ export default function CarCreateView() {
                   />
                   <RHFTextField
                     name="mileage"
-                    label="เลขไมล์ (ไม่จำเป็น)"
+                    label="เลขไมล์ (ถ้ามี)"
                     placeholder="เช่น 10,000"
                     thousandSeparator
                   />
@@ -169,11 +224,11 @@ export default function CarCreateView() {
                 <CarFormRow>
                   <RHFTextField
                     name="previousLicensePlate"
-                    label="ทะเบียนรถเก่า"
+                    label="ทะเบียนรถเก่า (ถ้ามี)"
                     placeholder="เช่น กก 1234"
                   />
                   <RHFTextField
-                    name="currentLicensePlate"
+                    name="newLicensePlate"
                     label="ทะเบียนรถใหม่"
                     placeholder="เช่น ขค 1234"
                   />
@@ -191,7 +246,7 @@ export default function CarCreateView() {
               </CardHeader>
               <CardContent>
                 <RHFFileUpload
-                  name="images"
+                  name="files"
                   maxFiles={10}
                   maxSize={5 * 1024 * 1024}
                 />
@@ -204,7 +259,7 @@ export default function CarCreateView() {
                 <CardTitle>สถานะเข้าใหม่</CardTitle>
               </CardHeader>
               <CardContent>
-                <RHFAutocomplete name="status" options={[]} />
+                <RHFAutocomplete name="status" options={categories} />
               </CardContent>
             </Card>
 
@@ -221,6 +276,7 @@ export default function CarCreateView() {
                   size="lg"
                   type="button"
                   variant="outline"
+                  onClick={onClickBack}
                   disabled={isSubmitting}
                 >
                   ยกเลิก

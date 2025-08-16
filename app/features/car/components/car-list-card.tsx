@@ -1,11 +1,13 @@
-import { Button } from "~/components/ui/button";
-import type { Car } from "../types/car.types";
-import Divider from "~/components/ui/divider";
-import { fCurrency } from "~/utils/format-string";
-import { Switch } from "~/components/ui/switch";
 import { useState } from "react";
+import { useLocation } from "react-router";
+import { Button } from "~/components/ui/button";
+import Divider from "~/components/ui/divider";
+import { Switch } from "~/components/ui/switch";
 import { useRouter } from "~/hooks/use-router";
 import { paths } from "~/lib/paths";
+import { fCurrency } from "~/utils/format-string";
+import type { Car } from "../types/car.types";
+import { getCarSalesType } from "../utils";
 
 // ----------------------------------------------------------------------
 
@@ -22,12 +24,13 @@ export default function CarListCard({ data }: Props) {
     price,
     thumbnail,
     model,
-    currentLicensePlate,
+    newLicensePlate,
     type,
     isActive,
   } = data;
 
   const router = useRouter();
+  const location = useLocation();
 
   const [checked, setChecked] = useState(isActive);
 
@@ -36,11 +39,19 @@ export default function CarListCard({ data }: Props) {
   };
 
   const onClickDetail = () => {
-    router.push(paths.cars.detail(data.id));
+    if (getCarSalesType(location) === "OWNER") {
+      router.push(paths.cars.owner.detail(data.id));
+    } else {
+      router.push(paths.cars.consignment.detail(data.id));
+    }
   };
 
   const onClickEdit = () => {
-    router.push(paths.cars.edit(data.id));
+    if (getCarSalesType(location) === "OWNER") {
+      router.push(paths.cars.owner.edit(data.id));
+    } else {
+      router.push(paths.cars.consignment.edit(data.id));
+    }
   };
 
   return (
@@ -67,7 +78,7 @@ export default function CarListCard({ data }: Props) {
         </div>
         <p className="text-lg font-semibold">{fCurrency(price)} บาท</p>
         <div className="flex gap-2 text-sm text-wrap text-gray-500">
-          <p className="flex-1">ทะเบียน : {currentLicensePlate}</p>
+          <p className="flex-1">ทะเบียน : {newLicensePlate}</p>
           <p className="flex-1">ประเภท: {type}</p>
         </div>
 

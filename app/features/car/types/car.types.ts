@@ -12,7 +12,7 @@ export type Car = {
   modelYear: number;
   price: string;
   previousLicensePlate: string;
-  currentLicensePlate: string;
+  newLicensePlate: string;
   isActive: boolean;
   slug: string;
 };
@@ -22,3 +22,5 @@ export type CarPagination = Pagination<Car>;
 export type CarListSearchQuery = {
   keyword?: string;
 };
+
+export type CarSalesType = "OWNER" | "CONSIGNMENT";

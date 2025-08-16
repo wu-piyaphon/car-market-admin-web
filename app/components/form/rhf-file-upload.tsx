@@ -28,22 +28,24 @@ export default function RHFFileUpload({
     <Controller
       control={control}
       name={name}
-      render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <div className="space-y-2">
-          {label && <Label htmlFor={name}>{label}</Label>}
-          <FileUpload
-            files={value || []}
-            onChange={onChange}
-            error={error?.message}
-            maxFiles={maxFiles}
-            maxSize={maxSize}
-            accept={accept}
-          />
-          {helperText && !error && (
-            <HelperText state="default">{helperText}</HelperText>
-          )}
-        </div>
-      )}
+      render={({ field: { onChange, value }, fieldState: { error } }) => {
+        return (
+          <div className="space-y-2">
+            {label && <Label htmlFor={name}>{label}</Label>}
+            <FileUpload
+              files={value || []}
+              onChange={onChange}
+              error={error}
+              maxFiles={maxFiles}
+              maxSize={maxSize}
+              accept={accept}
+            />
+            {helperText && !error && (
+              <HelperText state="default">{helperText}</HelperText>
+            )}
+          </div>
+        );
+      }}
     />
   );
 }

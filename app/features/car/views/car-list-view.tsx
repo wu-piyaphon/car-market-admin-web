@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useLocation } from "react-router";
 import { Button } from "~/components/ui/button";
 import EmptyContent from "~/components/ui/empty-content";
 import { useDebounce } from "~/hooks/use-debounce";
@@ -13,9 +14,13 @@ import {
   carListSearchSchema,
   type CarListSearchSchema,
 } from "../schemas/car-list-search";
+import { getCarSalesType } from "../utils";
 
-export default function CarListOwnerView() {
+export default function CarListView() {
   const router = useRouter();
+  const location = useLocation();
+
+  const salesType = getCarSalesType(location);
 
   const searchMethods = useForm<CarListSearchSchema>({
     resolver: zodResolver(carListSearchSchema),
@@ -32,18 +37,23 @@ export default function CarListOwnerView() {
   const isEmpty = !isFetching && (!data || data.items.length === 0);
   const hasData = !isFetching && data && data.items.length > 0;
 
+  const onClickAdd = () => {
+    if (salesType === "OWNER") {
+      router.push(paths.cars.owner.create);
+    } else {
+      router.push(paths.cars.consignment.create);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-row items-center justify-between">
         <h1>รายการรถแชมป์</h1>
-        <Button
-          onClick={() => router.push(paths.cars.create)}
-          className="block w-24 md:hidden"
-        >
+        <Button onClick={onClickAdd} className="block w-24 md:hidden">
           เพิ่มรถ
         </Button>
       </div>
-      <CarListSearch methods={searchMethods} />
+      <CarListSearch methods={searchMethods} onClickAdd={onClickAdd} />
 
       {isFetching && (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">

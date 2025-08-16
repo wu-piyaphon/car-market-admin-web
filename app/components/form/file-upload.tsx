@@ -1,13 +1,14 @@
 import { Image as ImageIcon, Upload, X } from "lucide-react";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+import type { FieldError } from "react-hook-form";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
 type FileUploadProps = {
   files: File[];
   onChange: (files: File[]) => void;
-  error?: string;
+  error?: FieldError;
   maxFiles?: number;
   maxSize?: number; // in bytes
   accept?: Record<string, string[]>;
@@ -88,7 +89,7 @@ export default function FileUpload({
       {/* Error Message */}
       {error && (
         <div className="rounded-md border border-red-200 bg-red-50 p-2 text-sm text-red-600">
-          {error}
+          {error.message}
         </div>
       )}
 

@@ -12,9 +12,16 @@ export default [
   ...prefix("dashboard", [
     layout("./components/layout/dashboard-layout.tsx", [
       ...prefix("cars", [
-        route("list-owner", "./routes/car-list-owner.tsx"),
-        route("create", "./routes/car-create.tsx"),
-        route("detail", "./routes/car-detail.tsx"),
+        ...prefix("owner", [
+          index("./routes/owner/car-list.tsx"),
+          route("create", "./routes/owner/car-create.tsx"),
+          route("detail", "./routes/owner/car-detail.tsx"),
+        ]),
+        ...prefix("consignment", [
+          index("./routes/consignment/car-list.tsx"),
+          route("create", "./routes/consignment/car-create.tsx"),
+          route("detail", "./routes/consignment/car-detail.tsx"),
+        ]),
       ]),
     ]),
   ]),

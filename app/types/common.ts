@@ -4,3 +4,12 @@ export type Pagination<T> = {
   pageSize: number;
   items: T[];
 };
+
+export type Option = {
+  id: string;
+  name: string;
+};
+
+export type OptionWithImage = Option & {
+  image: string;
+};

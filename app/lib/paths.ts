@@ -1,11 +1,16 @@
 export const paths = {
   cars: {
-    list: {
-      owner: "/dashboard/cars/list-owner",
-      consignment: "/dashboard/cars/list-consignment",
+    owner: {
+      list: "/dashboard/cars/owner",
+      create: "/dashboard/cars/owner/create",
+      detail: (id: string) => `/dashboard/cars/owner/detail/${id}`,
+      edit: (id: string) => `/dashboard/cars/owner/edit/${id}`,
     },
-    create: "/dashboard/cars/create",
-    detail: (id: string) => `/dashboard/cars/detail/${id}`,
-    edit: (id: string) => `/dashboard/cars/edit/${id}`,
+    consignment: {
+      list: "/dashboard/cars/consignment",
+      create: "/dashboard/cars/consignment/create",
+      detail: (id: string) => `/dashboard/cars/consignment/detail/${id}`,
+      edit: (id: string) => `/dashboard/cars/consignment/edit/${id}`,
+    },
   },
 } as const;

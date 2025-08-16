@@ -18,14 +18,16 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
+import type { Option } from "~/types/common";
 import HelperText from "./helper-text";
 
 // ----------------------------------------------------------------------
 
-export type AutocompleteOption = {
+export type AutocompleteOption = Option & {
   id: string;
   name: string;
   disabled?: boolean;
+  image?: string;
 };
 
 type RHFAutocompleteProps = {
@@ -46,8 +48,8 @@ export default function RHFAutocomplete({
   name,
   label,
   placeholder,
-  searchPlaceholder = "Search options...",
-  emptyText = "No option found.",
+  searchPlaceholder = "ค้นหาตัวเลือก...",
+  emptyText = "ไม่พบตัวเลือก",
   helperText,
   options,
   disabled,
@@ -93,9 +95,18 @@ export default function RHFAutocomplete({
                     className
                   )}
                 >
-                  <span className="truncate">
-                    {selectedOption ? selectedOption.name : placeholder}
-                  </span>
+                  <div className="flex flex-row items-center gap-3">
+                    {selectedOption?.image && (
+                      <img
+                        src={selectedOption.image}
+                        alt={selectedOption.name}
+                        className="h-4 w-4"
+                      />
+                    )}
+                    <span className="truncate">
+                      {selectedOption ? selectedOption.name : placeholder}
+                    </span>
+                  </div>
                   <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
@@ -108,29 +119,38 @@ export default function RHFAutocomplete({
                     <CommandGroup
                       className={cn(options.length === 0 && "hidden")}
                     >
-                      {options.map(option => (
-                        <CommandItem
-                          key={option.id}
-                          value={option.name}
-                          disabled={option.disabled}
-                          onSelect={() => {
-                            field.onChange(
-                              option.id === field.value ? "" : option.id
-                            );
-                            setOpen(false);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              field.value === option.id
-                                ? "opacity-100"
-                                : "opacity-0"
+                      {options.map(option => {
+                        return (
+                          <CommandItem
+                            key={option.id}
+                            value={option.name}
+                            disabled={option.disabled}
+                            onSelect={() => {
+                              field.onChange(
+                                option.id === field.value ? "" : option.id
+                              );
+                              setOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                field.value === option.id
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {option?.image && (
+                              <img
+                                src={option.image}
+                                alt={option.name}
+                                className="mr-2 h-4 w-4"
+                              />
                             )}
-                          />
-                          {option.name}
-                        </CommandItem>
-                      ))}
+                            {option.name}
+                          </CommandItem>
+                        );
+                      })}
                     </CommandGroup>
                   </CommandList>
                 </Command>

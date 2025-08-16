@@ -23,7 +23,7 @@ export const carCreateSchema = z.object({
 
   // License Information
   previousLicensePlate: z.string().optional(),
-  currentLicensePlate: z.string().min(1, "กรุณาระบุป้ายทะเบียนปัจจุบัน"),
+  newLicensePlate: z.string().min(1, "กรุณาระบุป้ายทะเบียนใหม่"),
 
   // Images
   files: z
