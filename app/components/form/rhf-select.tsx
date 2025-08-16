@@ -1,150 +1,118 @@
-import * as React from "react";
-import { useController } from "react-hook-form";
-import type { FieldPath, FieldValues, Control } from "react-hook-form";
 import { ChevronDownIcon } from "lucide-react";
+import * as React from "react";
+import { Controller, useFormContext } from "react-hook-form";
 
-import { cn } from "~/lib/utils";
 import { Label } from "~/components/ui/label";
+import { cn } from "~/lib/utils";
+import HelperText from "./helper-text";
 
 // ----------------------------------------------------------------------
 
 export type SelectOption = {
-  value: string;
-  label: string;
+  id: string;
+  name: string;
   disabled?: boolean;
 };
 
-type RHFSelectProps<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-> = Omit<React.ComponentProps<"select">, "name" | "defaultValue"> & {
-  name: TName;
-  control: Control<TFieldValues>;
+type RHFSelectProps = Omit<React.ComponentProps<"select">, "placeholder"> & {
+  name: string;
   label?: string;
-  placeholder?: string;
   helperText?: string;
-  showErrorMessage?: boolean;
-  containerClassName?: string;
-  labelClassName?: string;
-  errorClassName?: string;
   options: SelectOption[];
   allowEmpty?: boolean;
   emptyText?: string;
+  placeholder?: string;
 };
 
 // ----------------------------------------------------------------------
 
-export default function RHFSelect<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->({
+export default function RHFSelect({
   name,
-  control,
   label,
   placeholder,
   helperText,
-  showErrorMessage = true,
-  containerClassName,
-  labelClassName,
-  errorClassName,
   className,
   disabled,
   options,
   allowEmpty = true,
-  emptyText = "Select an option...",
   ...props
-}: RHFSelectProps<TFieldValues, TName>) {
-  const {
-    field,
-    fieldState: { error },
-  } = useController({
-    name,
-    control,
-  });
-
-  const hasError = !!error;
+}: RHFSelectProps) {
+  const { control } = useFormContext();
 
   return (
-    <div className={cn("grid gap-2", containerClassName)}>
-      {label && (
-        <Label
-          htmlFor={name}
-          className={cn(hasError && "text-destructive", labelClassName)}
-        >
-          {label}
-        </Label>
-      )}
+    <Controller
+      control={control}
+      name={name}
+      render={({ field, fieldState: { error } }) => {
+        return (
+          <div className="grid w-full gap-2">
+            {label && <Label htmlFor={name}>{label}</Label>}
 
-      <div className="relative">
-        <select
-          {...field}
-          {...props}
-          id={name}
-          disabled={disabled}
-          aria-invalid={hasError}
-          aria-describedby={
-            hasError
-              ? `${name}-error`
-              : helperText
-                ? `${name}-helper`
-                : undefined
-          }
-          className={cn(
-            // Base styles
-            "border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none",
-            // Dark mode support
-            "dark:bg-input/30",
-            // Focus styles
-            "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-            // Error styles
-            "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-            // Disabled styles
-            "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-            // Text styles
-            "text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground",
-            // Mobile responsive
-            "md:text-sm",
-            // Custom appearance
-            "cursor-pointer appearance-none",
-            // Error state
-            hasError && "border-destructive focus-visible:border-destructive",
-            className
-          )}
-        >
-          {allowEmpty && (
-            <option value="" disabled={!allowEmpty}>
-              {placeholder || emptyText}
-            </option>
-          )}
-          {options.map(option => (
-            <option
-              key={option.value}
-              value={option.value}
-              disabled={option.disabled}
-            >
-              {option.label}
-            </option>
-          ))}
-        </select>
+            <div className="relative">
+              <select
+                {...field}
+                {...props}
+                id={name}
+                disabled={disabled}
+                aria-invalid={!!error}
+                aria-describedby={
+                  error
+                    ? `${name}-error`
+                    : helperText
+                      ? `${name}-helper`
+                      : undefined
+                }
+                className={cn(
+                  // Base styles
+                  "border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none",
+                  // Dark mode support
+                  "dark:bg-input/30",
+                  // Focus styles
+                  "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+                  // Error styles
+                  "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+                  // Disabled styles
+                  "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+                  // Text styles
+                  "text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground",
+                  // Mobile responsive
+                  "md:text-sm",
+                  // Custom appearance
+                  "cursor-pointer appearance-none",
+                  // Error state
+                  error &&
+                    "border-destructive focus-visible:border-destructive",
+                  className
+                )}
+              >
+                {allowEmpty && (
+                  <option value="" disabled={!allowEmpty}>
+                    {placeholder}
+                  </option>
+                )}
+                {options.map(option => (
+                  <option
+                    key={option.id}
+                    value={option.id}
+                    disabled={option.disabled}
+                  >
+                    {option.name}
+                  </option>
+                ))}
+              </select>
 
-        {/* Custom chevron icon */}
-        <ChevronDownIcon className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2" />
-      </div>
+              {/* Custom chevron icon */}
+              <ChevronDownIcon className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2" />
+            </div>
 
-      {helperText && !hasError && (
-        <p id={`${name}-helper`} className="text-muted-foreground text-sm">
-          {helperText}
-        </p>
-      )}
+            {helperText && !error && (
+              <HelperText state="default">{helperText}</HelperText>
+            )}
 
-      {showErrorMessage && hasError && (
-        <p
-          id={`${name}-error`}
-          className={cn("text-destructive text-sm", errorClassName)}
-        >
-          {error.message}
-        </p>
-      )}
-    </div>
+            {error && <HelperText state="error">{error.message}</HelperText>}
+          </div>
+        );
+      }}
+    />
   );
 }

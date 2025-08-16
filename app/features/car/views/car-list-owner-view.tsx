@@ -1,12 +1,12 @@
 import { Button } from "~/components/ui/button";
+import EmptyContent from "~/components/ui/empty-content";
+import { useRouter } from "~/hooks/use-router";
+import { paths } from "~/lib/paths";
 import { useGetCars } from "../api/car.queries";
 import CarListCard from "../components/car-list-card";
 import CarListCardSkeleton from "../components/car-list-card-skeleton";
 import CarListSearch from "../components/car-list-search";
 import type { CarListSearchSchema } from "../schemas/car-list-search";
-import { useRouter } from "~/hooks/use-router";
-import { paths } from "~/lib/paths";
-import EmptyContent from "~/components/ui/empty-content";
 
 export default function CarListOwnerView() {
   const router = useRouter();
@@ -21,9 +21,14 @@ export default function CarListOwnerView() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row items-center justify-between">
         <h1>รายการรถแชมป์</h1>
-        <Button onClick={() => router.push(paths.cars.create)}>เพิ่มรถ</Button>
+        <Button
+          onClick={() => router.push(paths.cars.create)}
+          className="block w-24 md:hidden"
+        >
+          เพิ่มรถ
+        </Button>
       </div>
       <CarListSearch onSearch={handleSearch} />
 

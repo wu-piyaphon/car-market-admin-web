@@ -1,12 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Form from "~/components/form/form";
+import RHFTextField from "~/components/form/rhf-textfield";
+import { Button } from "~/components/ui/button";
+import { useRouter } from "~/hooks/use-router";
+import { paths } from "~/lib/paths";
 import {
   carListSearchSchema,
   type CarListSearchSchema,
 } from "../schemas/car-list-search";
-import RHFTextField from "~/components/form/rhf-textfield";
-import { Button } from "~/components/ui/button";
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +19,8 @@ type Props = {
 // ----------------------------------------------------------------------
 
 export default function CarListSearch({ onSearch }: Props) {
+  const router = useRouter();
+
   const methods = useForm<CarListSearchSchema>({
     resolver: zodResolver(carListSearchSchema),
     defaultValues: {
@@ -33,7 +37,13 @@ export default function CarListSearch({ onSearch }: Props) {
           name="keyword"
           placeholder="ค้นหารถด้วยชื่อรถยนต์และเลขทะเบียน"
         />
-        <Button type="submit">ค้นหา</Button>
+
+        <Button
+          onClick={() => router.push(paths.cars.create)}
+          className="hidden w-36 md:block"
+        >
+          เพิ่มรถ
+        </Button>
       </div>
     </Form>
   );
