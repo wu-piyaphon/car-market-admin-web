@@ -1,15 +1,29 @@
+export enum CarEngineType {
+  DIESEL = "DIESEL",
+  ELECTRIC = "ELECTRIC",
+  HYBRID = "HYBRID",
+  GASOLINE = "GASOLINE",
+  LPG = "LPG",
+  CNG = "CNG",
+}
+
+export enum CarTransmission {
+  MANUAL = "MANUAL",
+  AUTOMATIC = "AUTOMATIC",
+}
+
 export const CAR_ENGINE_TYPE_OPTIONS = [
-  { id: "DIESEL", name: "ดีเซล" },
-  { id: "ELECTRIC", name: "ไฟฟ้า" },
-  { id: "HYBRID", name: "ไฮบริด" },
-  { id: "GASOLINE", name: "แก๊สโซลีน" },
-  { id: "LPG", name: "แก๊ส LPG" },
-  { id: "CNG", name: "แก๊ส CNG" },
+  { id: CarEngineType.DIESEL, name: "ดีเซล" },
+  { id: CarEngineType.ELECTRIC, name: "ไฟฟ้า" },
+  { id: CarEngineType.HYBRID, name: "ไฮบริด" },
+  { id: CarEngineType.GASOLINE, name: "แก๊สโซลีน" },
+  { id: CarEngineType.LPG, name: "แก๊ส LPG" },
+  { id: CarEngineType.CNG, name: "แก๊ส CNG" },
 ];
 
 export const CAR_TRANSMISSION_OPTIONS = [
-  { id: "MANUAL", name: "เกียร์ธรรมดา" },
-  { id: "AUTOMATIC", name: "เกียร์อัตโนมัติ" },
+  { id: CarTransmission.MANUAL, name: "เกียร์ธรรมดา" },
+  { id: CarTransmission.AUTOMATIC, name: "เกียร์อัตโนมัติ" },
 ];
 
 export const CAR_COLOR_OPTIONS = [

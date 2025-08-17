@@ -6,13 +6,13 @@ import { Switch } from "~/components/ui/switch";
 import { useRouter } from "~/hooks/use-router";
 import { paths } from "~/lib/paths";
 import { fCurrency } from "~/utils/format-string";
-import type { Car } from "../types/car.types";
+import type { CarListItem } from "../types/car.types";
 import { getCarSalesType } from "../utils";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  data: Car;
+  data: CarListItem;
 };
 
 // ----------------------------------------------------------------------

@@ -5,12 +5,14 @@ type CarHeaderProps = {
   title: string;
   description: string;
   onClick: () => void;
+  action?: React.ReactNode;
 };
 
 export default function CarHeader({
   title,
   description,
   onClick,
+  action,
 }: CarHeaderProps) {
   return (
     <div className="mb-6">
@@ -28,6 +30,8 @@ export default function CarHeader({
           <h1 className="text-2xl font-bold">{title}</h1>
           <p className="text-gray-500">{description}</p>
         </div>
+
+        {action}
       </div>
     </div>
   );
