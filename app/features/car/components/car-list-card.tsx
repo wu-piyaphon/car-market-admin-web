@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { useLocation } from "react-router";
+import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import Divider from "~/components/ui/divider";
 import { Switch } from "~/components/ui/switch";
 import { useRouter } from "~/hooks/use-router";
 import { paths } from "~/lib/paths";
 import { fCurrency } from "~/utils/format-string";
+import {
+  useActivateCarMutation,
+  useDisableCarMutation,
+} from "../api/car.mutations";
 import type { CarListItem } from "../types/car.types";
 import { getCarSalesType } from "../utils";
 
@@ -32,10 +37,31 @@ export default function CarListCard({ data }: Props) {
   const router = useRouter();
   const location = useLocation();
 
+  const { mutate: activateCar, isPending: isActivating } =
+    useActivateCarMutation();
+  const { mutate: disableCar, isPending: isDisabling } =
+    useDisableCarMutation();
+
   const [checked, setChecked] = useState(isActive);
+  const isToggling = isActivating || isDisabling;
 
   const onToggleActive = (checked: boolean) => {
     setChecked(checked);
+
+    const mutation = checked ? activateCar : disableCar;
+    const action = checked
+      ? "ไม่สามารถแสดงรถได้"
+      : "ไม่สามารถตั้งค่าเป็นขายรถแล้วได้";
+
+    mutation(data.id, {
+      onError: error => {
+        setChecked(!checked);
+        toast.error(action, {
+          description:
+            error instanceof Error ? error.message : "กรุณาลองใหม่อีกครั้ง",
+        });
+      },
+    });
   };
 
   const onClickDetail = () => {
@@ -73,6 +99,7 @@ export default function CarListCard({ data }: Props) {
           <Switch
             label={checked ? "แสดง" : "ซ่อน"}
             checked={checked}
+            disabled={isToggling}
             onCheckedChange={onToggleActive}
           />
         </div>

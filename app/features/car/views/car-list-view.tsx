@@ -32,10 +32,10 @@ export default function CarListView() {
   const keyword = watch("keyword");
   const debounce = useDebounce(keyword, 500);
 
-  const { data, isFetching } = useGetCars({ keyword: debounce });
+  const { data, isLoading } = useGetCars({ keyword: debounce });
 
-  const isEmpty = !isFetching && (!data || data.items.length === 0);
-  const hasData = !isFetching && data && data.items.length > 0;
+  const isEmpty = !isLoading && (!data || data.items.length === 0);
+  const hasData = !isLoading && data && data.items.length > 0;
 
   const onClickAdd = () => {
     if (salesType === "OWNER") {
@@ -55,7 +55,7 @@ export default function CarListView() {
       </div>
       <CarListSearch methods={searchMethods} onClickAdd={onClickAdd} />
 
-      {isFetching && (
+      {isLoading && (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {[...Array(3)].map((_, idx) => (
             <CarListCardSkeleton key={idx} />
