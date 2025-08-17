@@ -15,12 +15,12 @@ export default [
         ...prefix("owner", [
           index("./routes/owner/car-list.tsx"),
           route("create", "./routes/owner/car-create.tsx"),
-          route("detail", "./routes/owner/car-detail.tsx"),
+          route("detail/:id", "./routes/owner/car-detail.tsx"),
         ]),
         ...prefix("consignment", [
           index("./routes/consignment/car-list.tsx"),
           route("create", "./routes/consignment/car-create.tsx"),
-          route("detail", "./routes/consignment/car-detail.tsx"),
+          route("detail/:id", "./routes/consignment/car-detail.tsx"),
         ]),
       ]),
     ]),
