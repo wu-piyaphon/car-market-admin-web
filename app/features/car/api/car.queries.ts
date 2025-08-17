@@ -5,7 +5,7 @@ import { CAR_KEYS } from "./car.keys";
 
 export const useGetCars = (query: CarListSearchQuery) =>
   useQuery({
-    queryKey: CAR_KEYS.list(),
+    queryKey: CAR_KEYS.query(query),
     queryFn: () => CAR_API.list(query),
   });
 
@@ -17,18 +17,18 @@ export const useGetCarDetail = (id: string | undefined) =>
 
 export const useGetBrands = () =>
   useQuery({
-    queryKey: CAR_KEYS.brands(),
+    queryKey: CAR_KEYS.brands,
     queryFn: () => CAR_API.brands(),
   });
 
 export const useGetCategories = () =>
   useQuery({
-    queryKey: CAR_KEYS.categories(),
+    queryKey: CAR_KEYS.categories,
     queryFn: () => CAR_API.categories(),
   });
 
 export const useGetTypes = () =>
   useQuery({
-    queryKey: CAR_KEYS.types(),
+    queryKey: CAR_KEYS.types,
     queryFn: () => CAR_API.types(),
   });

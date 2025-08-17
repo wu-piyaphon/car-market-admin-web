@@ -7,7 +7,7 @@ export const useCreateCarMutation = () =>
   useMutation({
     mutationFn: (data: FormData) => CAR_API.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [CAR_KEYS.all] });
+      queryClient.invalidateQueries({ queryKey: [CAR_KEYS.list] });
     },
   });
 
@@ -15,7 +15,7 @@ export const useActivateCarMutation = () => {
   return useMutation({
     mutationFn: (id: string) => CAR_API.activate(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [CAR_KEYS.all] });
+      queryClient.invalidateQueries({ queryKey: [CAR_KEYS.list] });
     },
   });
 };
@@ -24,7 +24,7 @@ export const useDisableCarMutation = () => {
   return useMutation({
     mutationFn: (id: string) => CAR_API.disable(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [CAR_KEYS.all] });
+      queryClient.invalidateQueries({ queryKey: [CAR_KEYS.list] });
     },
   });
 };

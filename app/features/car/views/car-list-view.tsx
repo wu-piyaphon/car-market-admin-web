@@ -32,7 +32,7 @@ export default function CarListView() {
   const keyword = watch("keyword");
   const debounce = useDebounce(keyword, 500);
 
-  const { data, isLoading } = useGetCars({ keyword: debounce });
+  const { data, isLoading } = useGetCars({ keyword: debounce, salesType });
 
   const isEmpty = !isLoading && (!data || data.items.length === 0);
   const hasData = !isLoading && data && data.items.length > 0;
