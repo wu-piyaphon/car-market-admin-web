@@ -28,6 +28,15 @@ const buttonVariants = cva(
         lg: "h-10 rounded-md py-2 px-6 has-[>svg]:px-4",
         icon: "size-8",
       },
+      color: {
+        success: cn(
+          "bg-green-600 !border-green-600 text-white hover:bg-green-500"
+        ),
+        inherit: cn(
+          "!bg-gray-200 !border-gray-600 text-gray-600 hover:text-gray-500"
+        ),
+        error: cn("bg-red-600 !border-red-600 text-white hover:bg-red-500"),
+      },
     },
     defaultVariants: {
       variant: "default",
@@ -39,6 +48,7 @@ const buttonVariants = cva(
 function Button({
   className,
   variant,
+  color,
   size,
   loading,
   asChild = false,
@@ -46,6 +56,7 @@ function Button({
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
+    color?: "success" | "inherit" | "error";
     loading?: boolean;
     asChild?: boolean;
   }) {
@@ -54,11 +65,10 @@ function Button({
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, color, className }))}
       {...props}
     >
-      {loading && <Loader2Icon className="animate-spin" />}
-      {children}
+      {loading ? <Loader2Icon className="animate-spin" /> : children}
     </Comp>
   );
 }

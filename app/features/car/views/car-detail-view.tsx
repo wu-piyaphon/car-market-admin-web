@@ -1,25 +1,48 @@
-import { Edit, MessageCircle, Trash2 } from "lucide-react";
+import { Edit, Eye, EyeOff, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { useLocation } from "react-router";
-import { CAR_LIST } from "~/_mocks/mock-car-list";
+import { useLocation, useParams } from "react-router";
+import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+} from "~/components/ui/dialog";
+import EmptyContent from "~/components/ui/empty-content";
 import { useRouter } from "~/hooks/use-router";
 import { paths } from "~/lib/paths";
+import { cn } from "~/lib/utils";
 import { fCurrency } from "~/utils/format-string";
+import {
+  useActivateCarMutation,
+  useDeleteCarMutation,
+  useDisableCarMutation,
+} from "../api/car.mutations";
+import { useGetCarDetail } from "../api/car.queries";
 import CarDetailCarousel from "../components/car-detail-carousel";
+import CarDetailSkeleton from "../components/car-detail-skeleton";
 import CarHeader from "../components/car-header";
 import { getCarSalesType } from "../utils";
 
-const MOCK_CAR = CAR_LIST[0];
-
 export default function CarDetailView() {
+  const { id } = useParams();
   const router = useRouter();
   const location = useLocation();
 
-  const [isActive] = useState(MOCK_CAR.isActive);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const salesType = getCarSalesType(location);
+
+  const { data, isLoading } = useGetCarDetail(id);
+  const { mutateAsync: activate, isPending: isActivating } =
+    useActivateCarMutation();
+  const { mutateAsync: disable, isPending: isDisabling } =
+    useDisableCarMutation();
+  const { mutateAsync: deleteCar, isPending: isDeleting } =
+    useDeleteCarMutation();
 
   const handleBack = () => {
     if (salesType === "OWNER") {
@@ -29,49 +52,120 @@ export default function CarDetailView() {
     }
   };
 
-  const handleEdit = () => {
-    if (salesType === "OWNER") {
-      router.push(paths.cars.owner.edit(MOCK_CAR.id));
-    } else {
-      router.push(paths.cars.consignment.edit(MOCK_CAR.id));
+  if (isLoading) {
+    return <CarDetailSkeleton />;
+  }
+
+  if (!data) {
+    return (
+      <EmptyContent
+        title="ไม่พบข้อมูลรถ"
+        description="ไม่พบข้อมูลรถที่คุณต้องการ กรุณาตรวจสอบและลองใหม่อีกครั้ง"
+        action={
+          <Button onClick={handleBack} variant="outline">
+            กลับไปหน้ารายการ
+          </Button>
+        }
+      />
+    );
+  }
+
+  const {
+    id: carId,
+    type,
+    brand,
+    model,
+    subModel,
+    modelYear,
+    color,
+    transmission,
+    engineType,
+    engineCapacity,
+    mileage,
+    previousLicensePlate,
+    newLicensePlate,
+    isActive,
+    images,
+    price,
+  } = data;
+
+  const carDetail = [
+    { label: "ประเภทรถ", value: type.name },
+    { label: "ยี่ห้อ", value: brand.name },
+    { label: "รุ่นรถ", value: model },
+    { label: "รุ่นย่อย", value: subModel },
+    { label: "ปีรถ", value: modelYear },
+    { label: "สีรถ", value: color },
+    { label: "ระบบเกียร์", value: transmission },
+    { label: "ประเภทเครื่องยนต์", value: engineType },
+    { label: "ขนาดเครื่องยนต์ CC", value: engineCapacity },
+    { label: "เลขไมล์", value: mileage || "-" },
+  ];
+
+  const plateDetail = [
+    { label: "ทะเบียนรถเก่า", value: previousLicensePlate || "-" },
+    { label: "ทะเบียนรถใหม่", value: newLicensePlate },
+  ];
+
+  const handleUpdateStatus = async () => {
+    try {
+      if (isActive) {
+        await disable(carId);
+      } else {
+        await activate(carId);
+      }
+      toast.success("สำเร็จ", { description: "เปลี่ยนสถานะรถเรียบร้อยแล้ว" });
+    } catch (error) {
+      console.error("Failed to update car status:", error);
+      toast.error("เกิดข้อผิดพลาด", {
+        description:
+          error instanceof Error ? error.message : "ไม่สามารถเปลี่ยนสถานะรถได้",
+      });
     }
   };
 
-  const handleToggleStatus = () => {
-    // Handle contact functionality
-    console.log("Contact owner/dealer");
+  const handleDelete = async () => {
+    try {
+      await deleteCar(carId);
+      toast.success("สำเร็จ", { description: "ลบรถคันนี้เรียบร้อยแล้ว" });
+      handleBack();
+    } catch (error) {
+      console.error("Failed to delete car:", error);
+      toast.error("เกิดข้อผิดพลาด", {
+        description:
+          error instanceof Error ? error.message : "ไม่สามารถลบรถคันนี้ได้",
+      });
+    }
   };
 
-  const handleDelete = () => {
-    // Handle delete functionality
-    console.log("Delete car");
+  const handleEdit = () => {
+    if (salesType === "OWNER") {
+      router.push(paths.cars.owner.edit(carId));
+    } else {
+      router.push(paths.cars.consignment.edit(carId));
+    }
   };
-
-  const carDetailRows = [
-    { label: "ประเภทรถ", value: MOCK_CAR.type.name },
-    { label: "ยี่ห้อ", value: MOCK_CAR.brand.name },
-    { label: "รุ่นรถ", value: MOCK_CAR.model },
-    { label: "รุ่นย่อย", value: MOCK_CAR.subModel },
-    { label: "ปีรถ", value: MOCK_CAR.modelYear },
-    { label: "สีรถ", value: MOCK_CAR.color },
-    { label: "ระบบเกียร์", value: MOCK_CAR.transmission },
-    { label: "ประเภทเครื่องยนต์", value: MOCK_CAR.engineType },
-    { label: "ขนาดเครื่องยนต์ CC", value: MOCK_CAR.engineCapacity },
-    { label: "เลขไมล์", value: MOCK_CAR.mileage },
-  ];
-
-  const ownerDetailRows = [
-    { label: "ทะเบียนรถเก่า", value: MOCK_CAR.previousLicensePlate },
-    { label: "ทะเบียนรถใหม่", value: MOCK_CAR.newLicensePlate },
-  ];
 
   return (
     <div className="mx-auto w-full max-w-7xl p-4.5 py-6">
       <CarHeader
-        title={`${MOCK_CAR.modelYear} ${MOCK_CAR.brand.name} ${MOCK_CAR.model}`}
-        description={MOCK_CAR.newLicensePlate}
+        title={`${modelYear} ${brand.name} ${model}`}
+        description={newLicensePlate}
         action={
-          <Button size="lg" variant="outline" className="rounded-full">
+          <Button
+            size="lg"
+            variant="outline"
+            color={isActive ? "success" : "inherit"}
+            className={cn(
+              "ml-2 cursor-auto rounded-full text-base font-medium",
+              isActive
+                ? "!bg-green-200 text-green-600 hover:text-green-600"
+                : "!border-gray-600 !bg-gray-200 text-gray-600 hover:text-gray-600"
+            )}
+          >
+            <div className="shrink-0">
+              <div className={cn("h-2 w-2 rounded-full bg-current")} />
+            </div>
             {isActive ? "แสดง" : "ซ่อน"}
           </Button>
         }
@@ -80,7 +174,7 @@ export default function CarDetailView() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <CarDetailCarousel images={MOCK_CAR.images} />
+          <CarDetailCarousel images={images} />
         </div>
 
         <div className="space-y-6">
@@ -88,7 +182,7 @@ export default function CarDetailView() {
             {/* -- Price -- */}
             <CardHeader className="gap-0 text-center">
               <p className="text-2xl font-semibold text-blue-600">
-                {fCurrency(MOCK_CAR.price)} บาท
+                {fCurrency(price)} บาท
               </p>
               <p className="text-sm text-gray-500">ราคาขาย</p>
             </CardHeader>
@@ -98,9 +192,9 @@ export default function CarDetailView() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {carDetailRows.map((row, index) => (
+                {carDetail.map((row, index) => (
                   <div key={index} className="flex justify-between">
-                    <span className="text-sm text-gray-600">{row.label}</span>
+                    <span className="text-sm text-gray-500">{row.label}</span>
                     <span className="text-sm font-medium">{row.value}</span>
                   </div>
                 ))}
@@ -112,9 +206,9 @@ export default function CarDetailView() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {ownerDetailRows.map((row, index) => (
+                {plateDetail.map((row, index) => (
                   <div key={index} className="flex justify-between">
-                    <span className="text-sm text-gray-600">{row.label}</span>
+                    <span className="text-sm text-gray-500">{row.label}</span>
                     <span className="text-sm font-medium">{row.value}</span>
                   </div>
                 ))}
@@ -135,13 +229,21 @@ export default function CarDetailView() {
                 </Button>
                 <Button
                   size="lg"
-                  onClick={handleToggleStatus}
+                  color={isActive ? "inherit" : "success"}
                   variant="default"
+                  onClick={handleUpdateStatus}
+                  loading={isActivating || isDisabling}
+                  disabled={isActivating || isDisabling}
                 >
-                  <MessageCircle size={16} />
+                  {isActive ? <EyeOff size={16} /> : <Eye size={16} />}
                   {isActive ? "ขายรถคันนี้แล้ว" : "แสดงรถคันนี้"}
                 </Button>
-                <Button size="lg" onClick={handleDelete} variant="destructive">
+                <Button
+                  size="lg"
+                  variant="default"
+                  color="error"
+                  onClick={() => setDialogOpen(true)}
+                >
                   <Trash2 size={16} />
                   ลบรถคันนี้
                 </Button>
@@ -150,6 +252,30 @@ export default function CarDetailView() {
           </Card>
         </div>
       </div>
+
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <DialogTitle>
+            ลบรถ {modelYear} {brand.name} {model}
+          </DialogTitle>
+          <DialogDescription>
+            ต้องการลบข้อมูลรถคันนี้? ข้อมูลรถที่ถูกลบจะไม่สามารถกู้คืนได้
+          </DialogDescription>
+          <DialogFooter>
+            <Button onClick={() => setDialogOpen(false)} variant="outline">
+              ยกเลิก
+            </Button>
+            <Button
+              onClick={handleDelete}
+              variant="default"
+              color="error"
+              loading={isDeleting}
+            >
+              ยืนยัน
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

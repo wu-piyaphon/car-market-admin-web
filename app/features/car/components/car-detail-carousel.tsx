@@ -7,7 +7,12 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "~/components/ui/carousel";
-import { Dialog, DialogContent } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "~/components/ui/dialog";
 import { cn } from "~/lib/utils";
 
 type CarDetailCarouselProps = {
@@ -106,8 +111,13 @@ export default function CarDetailCarousel({
           showCloseButton
           className="!max-w-[90vw] border-none p-0"
         >
+          <DialogTitle className="sr-only">Enlarged Image View</DialogTitle>
+          <DialogDescription className="sr-only">
+            Enlarged view of image {selectedImageIndex + 1} of {images.length}
+          </DialogDescription>
           <img
             src={images[selectedImageIndex]}
+            alt={`Enlarged view of image ${selectedImageIndex + 1}`}
             className="h-auto max-h-[90vh] w-full rounded-lg object-contain"
           />
         </DialogContent>

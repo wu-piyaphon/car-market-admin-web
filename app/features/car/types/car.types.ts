@@ -9,7 +9,7 @@ export type Car = {
   color: string;
   engineType: CarEngineType;
   engineCapacity: number;
-  mileage: number;
+  mileage: number | null;
   price: string;
   images: string[];
   previousLicensePlate: string | null;

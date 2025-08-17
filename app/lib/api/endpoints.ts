@@ -7,6 +7,10 @@ export const endpoints = {
   car: {
     list: "/cars",
     detail: (id: string) => `/cars/${id}`,
+    update: (id: string) => `/cars/${id}`,
+    delete: (id: string) => `/cars/${id}`,
+    activate: (id: string) => `/cars/${id}/activate`,
+    disable: (id: string) => `/cars/${id}/disable`,
     create: "/cars",
     brands: "/car-brands",
     categories: "/car-categories",

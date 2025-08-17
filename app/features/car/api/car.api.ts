@@ -24,6 +24,26 @@ export const CAR_API = {
     });
   },
 
+  update: (id: string, data: FormData): Promise<Car> => {
+    return api.put<Car>(endpoints.car.update(id), data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
+
+  delete: (id: string) => {
+    return api.delete(endpoints.car.delete(id));
+  },
+
+  activate: (id: string) => {
+    return api.put(endpoints.car.activate(id));
+  },
+
+  disable: (id: string) => {
+    return api.put(endpoints.car.disable(id));
+  },
+
   brands: (): Promise<OptionWithImage[]> => {
     return api.get<OptionWithImage[]>(endpoints.car.brands);
   },
