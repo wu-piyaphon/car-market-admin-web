@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useLocation } from "react-router";
 import { Button } from "~/components/ui/button";
 import EmptyContent from "~/components/ui/empty-content";
 import { useDebounce } from "~/hooks/use-debounce";
@@ -14,13 +13,14 @@ import {
   carListSearchSchema,
   type CarListSearchSchema,
 } from "../schemas/car-list-search";
-import { getCarSalesType } from "../utils";
+import type { CarSalesType } from "../types/car.types";
 
-export default function CarListView() {
+type Props = {
+  salesType: CarSalesType;
+};
+
+export default function CarListView({ salesType }: Props) {
   const router = useRouter();
-  const location = useLocation();
-
-  const salesType = getCarSalesType(location);
 
   const searchMethods = useForm<CarListSearchSchema>({
     resolver: zodResolver(carListSearchSchema),
@@ -70,7 +70,7 @@ export default function CarListView() {
       {hasData && (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {data.items.map(car => (
-            <CarListCard key={car.id} data={car} />
+            <CarListCard key={car.id} data={car} salesType={salesType} />
           ))}
         </div>
       )}

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useLocation } from "react-router";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import Divider from "~/components/ui/divider";
@@ -11,18 +10,18 @@ import {
   useActivateCarMutation,
   useDisableCarMutation,
 } from "../api/car.mutations";
-import type { CarListItem } from "../types/car.types";
-import { getCarSalesType } from "../utils";
+import type { CarListItem, CarSalesType } from "../types/car.types";
 
 // ----------------------------------------------------------------------
 
 type Props = {
   data: CarListItem;
+  salesType: CarSalesType;
 };
 
 // ----------------------------------------------------------------------
 
-export default function CarListCard({ data }: Props) {
+export default function CarListCard({ data, salesType }: Props) {
   const {
     subModel,
     modelYear,
@@ -35,7 +34,6 @@ export default function CarListCard({ data }: Props) {
   } = data;
 
   const router = useRouter();
-  const location = useLocation();
 
   const { mutate: activateCar, isPending: isActivating } =
     useActivateCarMutation();
@@ -65,7 +63,7 @@ export default function CarListCard({ data }: Props) {
   };
 
   const onClickDetail = () => {
-    if (getCarSalesType(location) === "OWNER") {
+    if (salesType === "OWNER") {
       router.push(paths.cars.owner.detail(data.id));
     } else {
       router.push(paths.cars.consignment.detail(data.id));
@@ -73,7 +71,7 @@ export default function CarListCard({ data }: Props) {
   };
 
   const onClickEdit = () => {
-    if (getCarSalesType(location) === "OWNER") {
+    if (salesType === "OWNER") {
       router.push(paths.cars.owner.edit(data.id));
     } else {
       router.push(paths.cars.consignment.edit(data.id));

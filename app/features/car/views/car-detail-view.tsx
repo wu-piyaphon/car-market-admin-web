@@ -1,6 +1,6 @@
 import { Edit, Eye, EyeOff, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { useLocation, useParams } from "react-router";
+import { useParams } from "react-router";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -25,16 +25,17 @@ import { useGetCarDetail } from "../api/car.queries";
 import CarDetailCarousel from "../components/car-detail-carousel";
 import CarDetailSkeleton from "../components/car-detail-skeleton";
 import CarHeader from "../components/car-header";
-import { getCarSalesType } from "../utils";
+import type { CarSalesType } from "../types/car.types";
 
-export default function CarDetailView() {
+type Props = {
+  salesType: CarSalesType;
+};
+
+export default function CarDetailView({ salesType }: Props) {
   const { id } = useParams();
   const router = useRouter();
-  const location = useLocation();
 
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  const salesType = getCarSalesType(location);
 
   const { data, isLoading } = useGetCarDetail(id);
   const { mutateAsync: activate, isPending: isActivating } =

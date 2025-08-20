@@ -9,7 +9,6 @@ import { tokenManager } from "~/lib/api/token-manager";
 import { AUTH_API } from "../api/auth.api";
 import type { AuthContextValue, AuthUser } from "../types/auth.types";
 import { useGetMeMutation } from "../api/auth.mutations";
-import { toast } from "sonner";
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
@@ -53,7 +52,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (err) {
       console.error(err);
-      toast.error("Failed to fetch user profile. Please log in again.");
     } finally {
       setLoading(false);
     }

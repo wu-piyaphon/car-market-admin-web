@@ -5,7 +5,6 @@ import RHFFileUpload from "~/components/form/rhf-file-upload";
 import RHFTextField from "~/components/form/rhf-textfield";
 import { Button } from "~/components/ui/button";
 
-import { useLocation } from "react-router";
 import { toast } from "sonner";
 import Form from "~/components/form/form";
 import RHFAutocomplete from "~/components/form/rhf-autocomplete";
@@ -26,13 +25,14 @@ import {
   CAR_TRANSMISSION_OPTIONS,
 } from "../constants/car-options";
 import { carCreateSchema, type CarCreateSchema } from "../schemas/car-create";
-import { getCarSalesType } from "../utils";
+import type { CarSalesType } from "../types/car.types";
 
-export default function CarCreateView() {
+type Props = {
+  salesType: CarSalesType;
+};
+
+export default function CarCreateEditView({ salesType }: Props) {
   const router = useRouter();
-  const location = useLocation();
-
-  const salesType = getCarSalesType(location);
 
   const { mutateAsync: createCar } = useCreateCarMutation();
   const { data: brands = [] } = useGetBrands();
