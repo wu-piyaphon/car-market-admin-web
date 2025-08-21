@@ -12,8 +12,8 @@ export const CAR_API = {
     return await api.get<CarPagination>(endpoints.car.list, { params: query });
   },
 
-  detail: (id: string): Promise<Car> => {
-    return api.get<Car>(endpoints.car.detail(id));
+  detail: async (id: string): Promise<Car> => {
+    return await api.get<Car>(endpoints.car.detail(id));
   },
 
   create: (data: FormData): Promise<Car> => {

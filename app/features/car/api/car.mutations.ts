@@ -11,6 +11,15 @@ export const useCreateCarMutation = () =>
     },
   });
 
+export const useUpdateCarMutation = () =>
+  useMutation({
+    mutationFn: ({ id, payload }: { id: string; payload: FormData }) =>
+      CAR_API.update(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [CAR_KEYS.list] });
+    },
+  });
+
 export const useActivateCarMutation = () => {
   return useMutation({
     mutationFn: (id: string) => CAR_API.activate(id),

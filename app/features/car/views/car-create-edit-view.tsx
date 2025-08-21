@@ -5,13 +5,18 @@ import RHFFileUpload from "~/components/form/rhf-file-upload";
 import RHFTextField from "~/components/form/rhf-textfield";
 import { Button } from "~/components/ui/button";
 
+import { useEffect } from "react";
 import { toast } from "sonner";
 import Form from "~/components/form/form";
 import RHFAutocomplete from "~/components/form/rhf-autocomplete";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { useRouter } from "~/hooks/use-router";
 import { paths } from "~/lib/paths";
-import { useCreateCarMutation } from "../api/car.mutations";
+import { formatImageUrlsToFiles } from "~/utils/format-file";
+import {
+  useCreateCarMutation,
+  useUpdateCarMutation,
+} from "../api/car.mutations";
 import {
   useGetBrands,
   useGetCategories,
@@ -25,16 +30,20 @@ import {
   CAR_TRANSMISSION_OPTIONS,
 } from "../constants/car-options";
 import { carCreateSchema, type CarCreateSchema } from "../schemas/car-create";
-import type { CarSalesType } from "../types/car.types";
+import type { Car, CarSalesType } from "../types/car.types";
 
 type Props = {
+  carData?: Car;
   salesType: CarSalesType;
 };
 
-export default function CarCreateEditView({ salesType }: Props) {
+export default function CarCreateEditView({ carData, salesType }: Props) {
   const router = useRouter();
+  const isEditMode = carData !== undefined;
 
   const { mutateAsync: createCar } = useCreateCarMutation();
+  const { mutateAsync: updateCar } = useUpdateCarMutation();
+
   const { data: brands = [] } = useGetBrands();
   const { data: categories = [] } = useGetCategories();
   const { data: types = [] } = useGetTypes();
@@ -102,11 +111,17 @@ export default function CarCreateEditView({ salesType }: Props) {
       });
       formData.append("salesType", salesType);
 
-      await createCar(formData);
-      reset();
+      if (isEditMode) {
+        await updateCar({ id: carData.id, payload: formData });
+      } else {
+        await createCar(formData);
+        reset();
+      }
 
       toast.success("สำเร็จ", {
-        description: "เพิ่มรถใหม่เรียบร้อยแล้ว",
+        description: isEditMode
+          ? "แก้ไขข้อมูลรถเรียบร้อยแล้ว"
+          : "เพิ่มรถใหม่เรียบร้อยแล้ว",
       });
     } catch (error) {
       console.error("Error creating car:", error);
@@ -117,11 +132,44 @@ export default function CarCreateEditView({ salesType }: Props) {
     }
   };
 
+  useEffect(() => {
+    if (isEditMode) {
+      // Convert image URLs to File objects for edit mode
+      const loadFormImages = async () => {
+        const files = await formatImageUrlsToFiles(carData.images);
+
+        reset({
+          typeId: carData.type.id,
+          brandId: carData.brand.id,
+          categoryId: carData.category?.id,
+          model: carData.model,
+          subModel: carData.subModel,
+          modelYear: carData.modelYear,
+          transmission: carData.transmission,
+          color: carData.color,
+          engineType: carData.engineType,
+          engineCapacity: carData.engineCapacity,
+          mileage: carData.mileage?.toString() || "",
+          price: carData.price.toString(),
+          previousLicensePlate: carData.previousLicensePlate || "",
+          newLicensePlate: carData.newLicensePlate || "",
+          files: files,
+        });
+      };
+
+      loadFormImages();
+    }
+  }, [isEditMode, carData, reset]);
+
   return (
     <>
       <CarHeader
-        title="เพิ่มรถใหม่"
-        description="กรอกข้อมูลของรถที่คุณต้องการเพิ่ม"
+        title={isEditMode ? "แก้ไขข้อมูลรถ" : "เพิ่มรถใหม่"}
+        description={
+          isEditMode
+            ? "กรอกข้อมูลของรถที่คุณต้องการแก้ไข"
+            : "กรอกข้อมูลของรถที่คุณต้องการเพิ่ม"
+        }
         onClick={onClickBack}
       />
 
@@ -259,7 +307,7 @@ export default function CarCreateEditView({ salesType }: Props) {
                 <CardTitle>สถานะเข้าใหม่</CardTitle>
               </CardHeader>
               <CardContent>
-                <RHFAutocomplete name="status" options={categories} />
+                <RHFAutocomplete name="categoryId" options={categories} />
               </CardContent>
             </Card>
 
@@ -270,7 +318,7 @@ export default function CarCreateEditView({ salesType }: Props) {
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
                 <Button size="lg" type="submit" loading={isSubmitting}>
-                  เพิ่มรถ
+                  {isEditMode ? "บันทึก" : "เพิ่มรถ"}
                 </Button>
                 <Button
                   size="lg"
