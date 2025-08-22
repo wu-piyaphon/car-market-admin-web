@@ -11,12 +11,17 @@ export default [
 
   ...prefix("dashboard", [
     layout("./components/layout/dashboard-layout.tsx", [
-      ...prefix("cars", [
+      ...prefix("car", [
         index("./routes/car/index.tsx"),
         route(":type/create", "./routes/car/create.tsx"),
         route(":type/edit/:id", "./routes/car/edit.tsx"),
         route(":type/detail/:id", "./routes/car/detail.tsx"),
         route(":type", "./routes/car/list.tsx"),
+      ]),
+      ...prefix("request", [
+        route("consignment", "./routes/request/consignment.tsx"),
+        route("sell", "./routes/request/sell.tsx"),
+        route("estimate", "./routes/request/estimate.tsx"),
       ]),
     ]),
   ]),

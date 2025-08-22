@@ -1,6 +1,5 @@
 import { Link, useLocation } from "react-router";
 import { useAuthContext } from "~/features/auth/context/auth-context";
-import { paths } from "~/lib/paths";
 import { Button } from "../ui/button";
 import Divider from "../ui/divider";
 import {
@@ -15,43 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-
-// ----------------------------------------------------------------------
-
-const MENU = [
-  {
-    title: "รายการรถ",
-    url: "#",
-    children: [
-      {
-        title: "รถแชมป์",
-        url: paths.cars.owner.list,
-      },
-      {
-        title: "รถฝากขาย",
-        url: paths.cars.consignment.list,
-      },
-    ],
-  },
-  {
-    title: "คำขอ",
-    url: "#",
-    children: [
-      {
-        title: "ฝากขายรถ",
-        url: "#",
-      },
-      {
-        title: "ขายรถ",
-        url: "#",
-      },
-      {
-        title: "ประเมินราคา",
-        url: "#",
-      },
-    ],
-  },
-];
+import { NAV_CONFIG } from "./nav-config";
 
 // ----------------------------------------------------------------------
 
@@ -70,7 +33,7 @@ export default function AppSidebar() {
         <h6>Good Car Market CMS</h6>
       </SidebarHeader>
       <SidebarContent>
-        {MENU.map(group => (
+        {NAV_CONFIG.map(group => (
           <SidebarGroup key={group.title}>
             <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -80,15 +43,9 @@ export default function AppSidebar() {
                   return (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild isActive={isActive}>
-                        {item.url === "#" ? (
-                          <span>
-                            <span>{item.title}</span>
-                          </span>
-                        ) : (
-                          <Link to={item.url}>
-                            <span>{item.title}</span>
-                          </Link>
-                        )}
+                        <Link to={item.url}>
+                          <span>{item.title}</span>
+                        </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );
