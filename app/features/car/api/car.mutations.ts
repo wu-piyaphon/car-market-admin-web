@@ -15,16 +15,16 @@ export const useUpdateCarMutation = () =>
   useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: FormData }) =>
       CAR_API.update(id, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [CAR_KEYS.list] });
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: [CAR_KEYS.detail(id)] });
     },
   });
 
 export const useActivateCarMutation = () => {
   return useMutation({
     mutationFn: (id: string) => CAR_API.activate(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [CAR_KEYS.list] });
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: CAR_KEYS.detail(id) });
     },
   });
 };
@@ -32,8 +32,8 @@ export const useActivateCarMutation = () => {
 export const useDisableCarMutation = () => {
   return useMutation({
     mutationFn: (id: string) => CAR_API.disable(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [CAR_KEYS.list] });
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: CAR_KEYS.detail(id) });
     },
   });
 };
