@@ -26,10 +26,6 @@ export default function CustomPagination({ pagination, className }: Props) {
     getPageNumbers,
   } = pagination;
 
-  if (totalPages <= 1) {
-    return null;
-  }
-
   const pageNumbers = getPageNumbers(2);
   const showLeftEllipsis = pageNumbers[0] > 1;
   const showRightEllipsis = pageNumbers[pageNumbers.length - 1] < totalPages;
