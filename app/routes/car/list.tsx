@@ -2,7 +2,11 @@ import { useParams, Navigate } from "react-router";
 import { getCarSalesType } from "~/features/car/utils";
 import CarListView from "~/features/car/views/car-list-view";
 
-export function meta({ params }: { params: { type: string } }) {
+export function meta({
+  params,
+}: {
+  params: { type: "owner" | "consignment" };
+}) {
   const carType = params.type === "owner" ? "Owner" : "Consignment";
   return [
     { title: `${carType} Car List` },
