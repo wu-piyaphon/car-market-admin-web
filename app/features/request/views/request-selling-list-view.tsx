@@ -1,23 +1,25 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import CustomPagination from "~/components/custom/custom-pagination";
 import Form from "~/components/form/form";
 import RHFTextField from "~/components/form/rhf-textfield";
+import type { CarSalesType } from "~/features/car/types/car.types";
 import { useDebounce } from "~/hooks/use-debounce";
 import { usePagination } from "~/hooks/use-pagination";
 import { useGetRequestsSelling } from "../api/request.queries";
-import RequestSellingCard from "../components/request-selling/request-selling-card";
 import RequestHeader from "../components/request-header";
 import RequestListEmpty from "../components/request-list-empty";
 import RequestListSkeleton from "../components/request-list-skeleton";
+import RequestSellingCard from "../components/request-selling/request-selling-card";
+import RequestSellingDialog from "../components/request-selling/request-selling-dialog";
 import RequestStatusTabs from "../components/request-status-tabs";
 import {
   requestSellingSearchSchema,
   type RequestSellingSearch,
 } from "../schemas/request-search-schema";
+import type { RequestSellingItem } from "../types/request-selling.types";
 import type { RequestStatus } from "../types/request.types";
-import type { CarSalesType } from "~/features/car/types/car.types";
 
 type Props = {
   salesType: CarSalesType;
@@ -28,6 +30,9 @@ export default function RequestSellingListView({
   salesType,
   tabCounts,
 }: Props) {
+  const [selected, setSelected] = useState<RequestSellingItem | null>(null);
+  const [dialogOpen, setDialogOpen] = useState<boolean>();
+
   const methods = useForm<RequestSellingSearch>({
     resolver: zodResolver(requestSellingSearchSchema),
     defaultValues: {
@@ -55,17 +60,21 @@ export default function RequestSellingListView({
   const isEmpty = !isLoading && (!data || data.items.length === 0);
   const hasData = !isLoading && data && data.items.length > 0;
 
-  const requests = data?.items || [];
+  // ----------------------------------------------------------------------
 
   const handleChangeStatus = (newStatus: RequestStatus) => {
     setValue("status", newStatus);
+  };
+
+  const onClickContact = (request: RequestSellingItem) => {
+    setSelected(request);
+    setDialogOpen(true);
   };
 
   // ----------------------------------------------------------------------
 
   useEffect(() => {
     if (data) {
-      console.log("set count");
       pagination.setCount(data.total);
     }
   }, [data]);
@@ -102,9 +111,21 @@ export default function RequestSellingListView({
 
           {hasData && (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {requests.map(request => (
-                <RequestSellingCard key={request.id} request={request} />
+              {data.items.map(request => (
+                <RequestSellingCard
+                  key={request.id}
+                  request={request}
+                  onClick={onClickContact}
+                />
               ))}
+
+              {selected && (
+                <RequestSellingDialog
+                  detail={selected}
+                  open={dialogOpen}
+                  onOpenChange={setDialogOpen}
+                />
+              )}
             </div>
           )}
         </div>

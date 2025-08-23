@@ -4,6 +4,7 @@ import { endpoints } from "~/lib/api/endpoints";
 import type {
   RequestSellingList,
   RequestSellingListQuery,
+  RequestSellingUpdate,
 } from "../types/request-selling.types";
 
 export const REQUEST_API = {
@@ -11,5 +12,8 @@ export const REQUEST_API = {
     return await api.get<RequestSellingList>(endpoints.sellingRequest.list, {
       params: query,
     });
+  },
+  update: async (id: string, data: RequestSellingUpdate): Promise<void> => {
+    return await api.put(endpoints.sellingRequest.update(id), data);
   },
 };

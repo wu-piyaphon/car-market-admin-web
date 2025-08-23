@@ -1,12 +1,6 @@
 import type { Pagination } from "~/types/common";
 import type { RequestStatus } from "./request.types";
-
-export enum RequestSalesTypeEnum {
-  CONSIGNMENT = "CONSIGNMENT",
-  OWNER = "OWNER",
-}
-
-export type RequestSalesType = keyof typeof RequestSalesTypeEnum;
+import type { CarSalesType } from "~/features/car/types/car.types";
 
 export type RequestSellingItem = {
   id: string;
@@ -15,7 +9,7 @@ export type RequestSellingItem = {
   nickname: string;
   phoneNumber: string;
   note: string | null;
-  type: RequestSalesType;
+  type: CarSalesType;
   status: RequestStatus;
   createdAt: string;
 };
@@ -23,8 +17,15 @@ export type RequestSellingItem = {
 export type RequestSellingList = Pagination<RequestSellingItem>;
 export type RequestSellingListQuery = {
   keyword?: string;
-  type: RequestSalesType;
+  type: CarSalesType;
   status: RequestStatus;
   page: number;
   pageSize: number;
+};
+
+// ----------------------------------------------------------------------
+
+export type RequestSellingUpdate = {
+  note: string | null;
+  status: RequestStatus;
 };

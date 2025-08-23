@@ -18,6 +18,6 @@ export const endpoints = {
   },
   sellingRequest: {
     list: "/selling-requests",
-    detail: (id: string) => `/selling-requests/${id}`,
+    update: (id: string) => `/selling-requests/${id}`,
   },
 };

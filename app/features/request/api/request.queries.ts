@@ -5,6 +5,6 @@ import { REQUEST_KEYS } from "./request.keys";
 
 export const useGetRequestsSelling = (query: RequestSellingListQuery) =>
   useQuery({
-    queryKey: REQUEST_KEYS.list(query),
+    queryKey: REQUEST_KEYS.query(query),
     queryFn: () => REQUEST_API.list(query),
   });
