@@ -19,8 +19,7 @@ export default [
         route(":type", "./routes/car/list.tsx"),
       ]),
       ...prefix("request", [
-        route("consignment", "./routes/request/consignment.tsx"),
-        route("sell", "./routes/request/sell.tsx"),
+        route("selling/:type", "./routes/request/selling.tsx"),
         route("estimate", "./routes/request/estimate.tsx"),
       ]),
     ]),

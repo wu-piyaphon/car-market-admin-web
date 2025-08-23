@@ -16,4 +16,8 @@ export const endpoints = {
     categories: "/car-categories",
     types: "/car-types",
   },
+  sellingRequest: {
+    list: "/selling-requests",
+    detail: (id: string) => `/selling-requests/${id}`,
+  },
 };

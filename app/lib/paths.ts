@@ -14,8 +14,10 @@ export const paths = {
     },
   },
   requests: {
-    consignment: "/dashboard/request/consignment",
-    sell: "/dashboard/request/sell",
+    selling: {
+      owner: "/dashboard/request/selling/owner",
+      consignment: "/dashboard/request/selling/consignment",
+    },
     estimate: "/dashboard/request/estimate",
   },
 } as const;

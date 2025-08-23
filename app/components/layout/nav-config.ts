@@ -21,11 +21,11 @@ export const NAV_CONFIG = [
     children: [
       {
         title: "ฝากขายรถ",
-        url: paths.requests.consignment,
+        url: paths.requests.selling.consignment,
       },
       {
         title: "ขายรถ",
-        url: paths.requests.sell,
+        url: paths.requests.selling.owner,
       },
       {
         title: "ประเมินราคา",
