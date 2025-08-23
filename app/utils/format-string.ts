@@ -94,13 +94,17 @@ export function fDate(
     year: "numeric",
     month: "short",
     day: "numeric",
-  },
-  locale = "en-US"
+  }
 ): string {
   const dateObj = new Date(date);
   if (isNaN(dateObj.getTime())) return "Invalid Date";
 
-  return new Intl.DateTimeFormat(locale, options).format(dateObj);
+  return dateObj.toLocaleDateString("th-TH", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    ...options,
+  });
 }
 
 /**
