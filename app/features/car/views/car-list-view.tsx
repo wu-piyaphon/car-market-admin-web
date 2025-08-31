@@ -14,6 +14,9 @@ import {
   type CarListSearchSchema,
 } from "../schemas/car-list-search";
 import type { CarSalesType } from "../types/car.types";
+import CustomPagination from "~/components/custom/custom-pagination";
+import { usePagination } from "~/hooks/use-pagination";
+import { useEffect } from "react";
 
 type Props = {
   salesType: CarSalesType;
@@ -21,6 +24,10 @@ type Props = {
 
 export default function CarListView({ salesType }: Props) {
   const router = useRouter();
+
+  const pagination = usePagination({
+    rowsPerPage: 9,
+  });
 
   const searchMethods = useForm<CarListSearchSchema>({
     resolver: zodResolver(carListSearchSchema),
@@ -37,6 +44,8 @@ export default function CarListView({ salesType }: Props) {
   const isEmpty = !isLoading && (!data || data.items.length === 0);
   const hasData = !isLoading && data && data.items.length > 0;
 
+  // ----------------------------------------------------------------------
+
   const onClickAdd = () => {
     if (salesType === "OWNER") {
       router.push(paths.cars.owner.create);
@@ -44,6 +53,16 @@ export default function CarListView({ salesType }: Props) {
       router.push(paths.cars.consignment.create);
     }
   };
+
+  // ----------------------------------------------------------------------
+
+  useEffect(() => {
+    if (data) {
+      pagination.setCount(data.total);
+    }
+  }, [data]);
+
+  // ----------------------------------------------------------------------
 
   return (
     <div className="flex flex-col gap-8">
@@ -74,6 +93,11 @@ export default function CarListView({ salesType }: Props) {
           ))}
         </div>
       )}
+
+      <CustomPagination
+        pagination={pagination}
+        className="mt-8 flex justify-center"
+      />
     </div>
   );
 }
