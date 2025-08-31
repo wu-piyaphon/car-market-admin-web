@@ -21,10 +21,14 @@ import {
 import type { RequestSellingItem } from "../types/request-selling.types";
 import type { RequestStatus } from "../types/request.types";
 
+// ----------------------------------------------------------------------
+
 type Props = {
   salesType: CarSalesType;
   tabCounts: Record<RequestStatus, number>;
 };
+
+// ----------------------------------------------------------------------
 
 export default function RequestSellingListView({
   salesType,
@@ -36,7 +40,7 @@ export default function RequestSellingListView({
   const methods = useForm<RequestSellingSearch>({
     resolver: zodResolver(requestSellingSearchSchema),
     defaultValues: {
-      keyword: "",
+      keyword: undefined,
       status: "NOT_CONTACTED",
     },
   });

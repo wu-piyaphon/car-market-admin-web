@@ -45,6 +45,8 @@ export type CarPagination = Pagination<CarListItem>;
 export type CarListSearchQuery = {
   keyword?: string;
   salesType: CarSalesType;
+  page: number;
+  pageSize: number;
 };
 
 export type CarSalesType = "OWNER" | "CONSIGNMENT";

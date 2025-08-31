@@ -84,7 +84,7 @@ export default function CarListCard({ data, salesType }: Props) {
         <img
           src={thumbnail}
           alt={model}
-          className="h-[120px] w-full rounded-t-md object-cover md:h-[220px]"
+          className="h-[120px] w-full rounded-t-md object-contain md:h-[220px]"
         />
       </div>
 

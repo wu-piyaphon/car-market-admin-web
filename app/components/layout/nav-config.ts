@@ -29,7 +29,7 @@ export const NAV_CONFIG = [
       },
       {
         title: "ประเมินราคา",
-        url: paths.requests.estimate,
+        url: paths.requests.estimate.list,
       },
     ],
   },

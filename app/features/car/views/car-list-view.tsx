@@ -32,14 +32,19 @@ export default function CarListView({ salesType }: Props) {
   const searchMethods = useForm<CarListSearchSchema>({
     resolver: zodResolver(carListSearchSchema),
     defaultValues: {
-      keyword: "",
+      keyword: undefined,
     },
   });
   const { watch } = searchMethods;
   const keyword = watch("keyword");
   const debounce = useDebounce(keyword, 500);
 
-  const { data, isLoading } = useGetCars({ keyword: debounce, salesType });
+  const { data, isLoading } = useGetCars({
+    keyword: debounce,
+    salesType,
+    page: pagination.page,
+    pageSize: pagination.rowsPerPage,
+  });
 
   const isEmpty = !isLoading && (!data || data.items.length === 0);
   const hasData = !isLoading && data && data.items.length > 0;

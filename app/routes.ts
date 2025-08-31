@@ -20,7 +20,8 @@ export default [
       ]),
       ...prefix("request", [
         route("selling/:type", "./routes/request/selling.tsx"),
-        route("estimate", "./routes/request/estimate.tsx"),
+        route("estimate", "./routes/request/estimate/list.tsx"),
+        route("estimate/:id", "./routes/request/estimate/detail.tsx"),
       ]),
     ]),
   ]),

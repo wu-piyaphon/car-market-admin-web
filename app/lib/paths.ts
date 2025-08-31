@@ -18,6 +18,9 @@ export const paths = {
       owner: "/dashboard/request/selling/owner",
       consignment: "/dashboard/request/selling/consignment",
     },
-    estimate: "/dashboard/request/estimate",
+    estimate: {
+      list: "/dashboard/request/estimate",
+      detail: (id: string) => `/dashboard/request/estimate/${id}`,
+    },
   },
 } as const;

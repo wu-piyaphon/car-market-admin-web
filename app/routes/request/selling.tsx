@@ -31,14 +31,14 @@ export default function RequestSellingList() {
     type: salesType,
     status: "CONTACTED",
     page: 1,
-    pageSize: 1,
+    pageSize: 16,
   });
 
   const { data: notContactedData } = useGetRequestsSelling({
     type: salesType,
     status: "NOT_CONTACTED",
     page: 1,
-    pageSize: 1,
+    pageSize: 16,
   });
 
   const tabCounts = {

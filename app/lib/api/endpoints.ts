@@ -20,4 +20,9 @@ export const endpoints = {
     list: "/selling-requests",
     update: (id: string) => `/selling-requests/${id}`,
   },
+  estimateRequest: {
+    list: "/estimate-requests",
+    detail: (id: string) => `/estimate-requests/${id}`,
+    update: (id: string) => `/estimate-requests/${id}`,
+  },
 };
