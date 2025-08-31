@@ -52,7 +52,7 @@ export default function RequestEstimateCard({ request }: Props) {
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={onClick}>
+        <Button onClick={onClick} className="flex-1">
           {isContacted && <SquarePen className="size-5" />}
           {isContacted ? "ดูรายละเอียด" : "ดูรายละเอียด"}
         </Button>

@@ -1,21 +1,22 @@
 import type { DialogProps } from "@radix-ui/react-dialog";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import Form from "~/components/form/form";
+import RHFTextarea from "~/components/form/rhf-textarea";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogTitle,
 } from "~/components/ui/dialog";
-import type { RequestEstimateItem } from "../../types/request-estimate.types";
-import Form from "~/components/form/form";
-import { useForm } from "react-hook-form";
-import RHFTextarea from "~/components/form/rhf-textarea";
 import { useUpdateRequestEstimateMutation } from "../../api/request.mutation";
-import { toast } from "sonner";
+import type { RequestEstimateDetail } from "../../types/request-estimate.types";
 
 type Props = DialogProps & {
-  detail: RequestEstimateItem;
+  detail: RequestEstimateDetail;
   onOpenChange: (open: boolean) => void;
 };
 
@@ -83,6 +84,7 @@ export default function RequestEstimateDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogTitle>ติดต่อกลับ</DialogTitle>
+        <DialogDescription className="sr-only" />
 
         <div className="flex flex-row">
           <div className="flex-2/4">
@@ -99,7 +101,7 @@ export default function RequestEstimateDialog({
         <div className="flex flex-col">
           <p>รถยนต์:</p>
           <p>
-            {detail.brand} {detail.model} {detail.modelYear}
+            {detail.brand.name} {detail.model} {detail.modelYear}
           </p>
         </div>
 
@@ -116,7 +118,7 @@ export default function RequestEstimateDialog({
         </Form>
 
         <DialogFooter>
-          <div className="flex w-[50%] flex-row gap-2">
+          <div className="flex flex-row gap-2">
             <Button
               onClick={() => onOpenChange(false)}
               variant="outline"

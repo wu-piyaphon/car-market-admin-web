@@ -28,7 +28,7 @@ export type RequestEstimateDetail = {
   modelYear: number;
   firstName: string;
   phoneNumber: string;
-  lineId: string;
+  lineId: string | null;
   images: string[];
   note: string | null;
   installmentsInMonth: number;

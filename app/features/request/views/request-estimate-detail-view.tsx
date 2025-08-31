@@ -1,6 +1,6 @@
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, SquarePen } from "lucide-react";
+import { useState } from "react";
 import { useParams } from "react-router";
-import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import EmptyContent from "~/components/ui/empty-content";
@@ -9,16 +9,16 @@ import { paths } from "~/lib/paths";
 import { fDate } from "~/utils/format-string";
 import CarDetailCarousel from "../../car/components/car-detail-carousel";
 import CarHeader from "../../car/components/car-header";
-import { useUpdateRequestEstimateMutation } from "../api/request.mutation";
 import { useGetRequestEstimateDetail } from "../api/request.queries";
+import RequestEstimateDialog from "../components/request-estimate/request-estimate-dialog";
 
 export default function RequestEstimateDetailView() {
   const { id } = useParams();
   const router = useRouter();
 
   const { data, isLoading } = useGetRequestEstimateDetail(id!);
-  const { mutateAsync: updateRequest, isPending: isUpdating } =
-    useUpdateRequestEstimateMutation();
+
+  const [dialogOpen, setDialogOpen] = useState<boolean>();
 
   const handleBack = () => {
     router.push(paths.requests.estimate.list);
@@ -58,7 +58,6 @@ export default function RequestEstimateDetailView() {
   }
 
   const {
-    id: requestId,
     brand,
     model,
     modelYear,
@@ -68,7 +67,6 @@ export default function RequestEstimateDetailView() {
     images,
     installmentsInMonth,
     status,
-    note,
     createdAt,
   } = data;
 
@@ -83,7 +81,7 @@ export default function RequestEstimateDetailView() {
   const customerDetail = [
     { label: "ชื่อ", value: firstName },
     { label: "เบอร์โทรศัพท์", value: phoneNumber },
-    { label: "LINE ID", value: lineId },
+    { label: "LINE ID", value: lineId || "-" },
   ];
 
   const requestDetail = [
@@ -91,27 +89,8 @@ export default function RequestEstimateDetailView() {
     { label: "วันที่ขอประเมิน", value: fDate(createdAt) },
   ];
 
-  const handleUpdateStatus = async () => {
-    try {
-      await updateRequest({
-        id: requestId,
-        payload: {
-          note: note || "",
-          status: isContacted ? "NOT_CONTACTED" : "CONTACTED",
-        },
-      });
-      toast.success("สำเร็จ", {
-        description: isContacted
-          ? "เปลี่ยนสถานะเป็นยังไม่ได้ติดต่อเรียบร้อยแล้ว"
-          : "บันทึกการติดต่อลูกค้าเรียบร้อยแล้ว",
-      });
-    } catch (error) {
-      console.error("Failed to update request status:", error);
-      toast.error("เกิดข้อผิดพลาด", {
-        description:
-          error instanceof Error ? error.message : "ไม่สามารถเปลี่ยนสถานะได้",
-      });
-    }
+  const onClickAction = () => {
+    setDialogOpen(true);
   };
 
   return (
@@ -149,13 +128,13 @@ export default function RequestEstimateDetailView() {
               </div>
             </CardContent>
 
-            {/* -- Customer Information -- */}
+            {/* -- Request Information -- */}
             <CardHeader className="mt-3">
-              <CardTitle>ข้อมูลผู้ติดต่อ</CardTitle>
+              <CardTitle>ข้อมูลคำขอ</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {customerDetail.map((row, index) => (
+                {requestDetail.map((row, index) => (
                   <div key={index} className="flex justify-between">
                     <span className="text-sm text-gray-500">{row.label}</span>
                     <span className="text-sm font-medium">{row.value}</span>
@@ -164,13 +143,13 @@ export default function RequestEstimateDetailView() {
               </div>
             </CardContent>
 
-            {/* -- Request Information -- */}
+            {/* -- Customer Information -- */}
             <CardHeader className="mt-3">
-              <CardTitle>ข้อมูลคำขอ</CardTitle>
+              <CardTitle>ข้อมูลผู้ติดต่อ</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {requestDetail.map((row, index) => (
+                {customerDetail.map((row, index) => (
                   <div key={index} className="flex justify-between">
                     <span className="text-sm text-gray-500">{row.label}</span>
                     <span className="text-sm font-medium">{row.value}</span>
@@ -191,18 +170,26 @@ export default function RequestEstimateDetailView() {
                   size="lg"
                   color={isContacted ? "inherit" : "success"}
                   variant="default"
-                  onClick={handleUpdateStatus}
-                  loading={isUpdating}
-                  disabled={isUpdating}
+                  onClick={onClickAction}
                 >
-                  {isContacted ? <EyeOff size={16} /> : <Eye size={16} />}
-                  {isContacted ? "ยังไม่ได้ติดต่อ" : "ติดต่อ"}
+                  {isContacted ? (
+                    <SquarePen className="size-4.5" />
+                  ) : (
+                    <Eye className="size-4.5" />
+                  )}
+                  {isContacted ? "ดูบันทึก" : "ติดต่อแล้ว"}
                 </Button>
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
+
+      <RequestEstimateDialog
+        detail={data}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
     </div>
   );
 }
