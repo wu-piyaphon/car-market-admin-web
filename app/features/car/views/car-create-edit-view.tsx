@@ -31,6 +31,7 @@ import {
 } from "../constants/car-options";
 import { carCreateSchema, type CarCreateSchema } from "../schemas/car-create";
 import type { Car, CarSalesType } from "../types/car.types";
+import { fCapitalize } from "~/utils/format-string";
 
 type Props = {
   carData?: Car;
@@ -47,6 +48,11 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
   const { data: brands = [] } = useGetBrands();
   const { data: categories = [] } = useGetCategories();
   const { data: types = [] } = useGetTypes();
+
+  const categoryOptions = [
+    { id: "", name: "ทั่วไป" },
+    ...categories.map(item => ({ id: item.id, name: fCapitalize(item.name) })),
+  ];
 
   const methods = useForm<CarCreateSchema>({
     resolver: zodResolver(carCreateSchema),
@@ -295,7 +301,7 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
               <CardContent>
                 <RHFFileUpload
                   name="files"
-                  maxFiles={10}
+                  maxFiles={16}
                   maxSize={5 * 1024 * 1024}
                 />
               </CardContent>
@@ -307,7 +313,7 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
                 <CardTitle>สถานะเข้าใหม่</CardTitle>
               </CardHeader>
               <CardContent>
-                <RHFAutocomplete name="categoryId" options={categories} />
+                <RHFAutocomplete name="categoryId" options={categoryOptions} />
               </CardContent>
             </Card>
 
