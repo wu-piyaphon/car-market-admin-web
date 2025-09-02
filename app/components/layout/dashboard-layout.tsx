@@ -3,6 +3,7 @@ import { Outlet } from "react-router";
 import { useAuthContext } from "~/features/auth/context/auth-context";
 import { useRouter } from "~/hooks/use-router";
 import Container from "../ui/container";
+import { LoadingLayout } from "../ui/loading";
 import { SidebarProvider } from "../ui/sidebar";
 import AppSidebar from "./app-sidebar";
 import AppTopbar from "./app-topbar";
@@ -22,7 +23,14 @@ export default function DashboardLayout() {
   // ----------------------------------------------------------------------
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <LoadingLayout
+        variant="dots"
+        size="xl"
+        text="Authenticating..."
+        fullScreen
+      />
+    );
   }
 
   if (!authenticated) {
