@@ -3,14 +3,14 @@ import { Label } from "~/components/ui/label";
 import FileUpload from "./file-upload";
 import HelperText from "./helper-text";
 
-interface RHFFileUploadProps {
+type RHFFileUploadProps = {
   name: string;
   label?: string;
   helperText?: string;
   maxFiles?: number;
   maxSize?: number;
   accept?: Record<string, string[]>;
-}
+};
 
 export default function RHFFileUpload({
   name,

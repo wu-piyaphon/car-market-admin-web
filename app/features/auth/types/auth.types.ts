@@ -6,13 +6,13 @@ export type AuthUser = {
   role: "user" | "admin";
 };
 
-export interface AuthContextValue {
+export type AuthContextValue = {
   user: AuthUser | null;
   authenticated: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-}
+};
 
 export type AuthError = {
   message: string;
