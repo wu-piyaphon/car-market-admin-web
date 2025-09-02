@@ -7,14 +7,16 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+import { QueryClientProvider } from "@tanstack/react-query";
 import type { Route } from "./+types/root";
 import "./app.css";
-import { ThemeProvider } from "./components/theme-provider";
 import { ModeToggle } from "./components/mode-toggle";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "./lib/query-client";
+import { ThemeProvider } from "./components/theme-provider";
+import { LoadingOverlay } from "./components/ui/loading";
 import { Toaster } from "./components/ui/sonner";
 import { AuthProvider } from "./features/auth/context/auth-context";
+import { useRouter } from "./hooks/use-router";
+import { queryClient } from "./lib/query-client";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -48,10 +50,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const { isNavigating } = useRouter();
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ThemeProvider>
+          <LoadingOverlay visible={isNavigating} />
           <ModeToggle />
           <Toaster />
           <Outlet />

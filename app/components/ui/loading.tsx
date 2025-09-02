@@ -154,7 +154,7 @@ function LoadingOverlay({
       className={cn(
         "absolute inset-0 z-10 flex items-center justify-center",
         "bg-background/80 backdrop-blur-sm",
-        "transition-opacity duration-200",
+        "z-50 transition-opacity duration-200",
         className
       )}
     >
