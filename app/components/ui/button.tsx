@@ -6,7 +6,7 @@ import { Loader2Icon } from "lucide-react";
 import { cn } from "~/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-normal transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-6 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-normal transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-5 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
@@ -25,17 +25,19 @@ const buttonVariants = cva(
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
         sm: "h-8 rounded-md py-2 gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md py-2 px-6 has-[>svg]:px-4",
+        lg: "h-10 text-md rounded-md py-2 px-6 has-[>svg]:px-4",
         icon: "size-8",
       },
       color: {
+        default: "",
         success: cn(
           "bg-green-600 !border-green-600 text-white hover:bg-green-500"
         ),
-        inherit: cn(
-          "!bg-gray-200 !border-gray-600 text-gray-600 hover:text-gray-500"
-        ),
+        inherit: cn("bg-slate-600 text-white hover:bg-slate-600/70"),
         error: cn("bg-red-600 !border-red-600 text-white hover:bg-red-500"),
+        secondary: cn(
+          "bg-primary-foreground text-foreground hover:opacity-70 hover:bg-primary-foreground border-slate-300 text-slate-500 dark:text-slate-200 border-solid border"
+        ),
       },
     },
     defaultVariants: {
@@ -56,7 +58,7 @@ function Button({
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
-    color?: "success" | "inherit" | "error";
+    color?: "default" | "success" | "inherit" | "error" | "secondary";
     loading?: boolean;
     asChild?: boolean;
     fullWidth?: boolean;

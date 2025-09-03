@@ -11,6 +11,7 @@ import {
   useDisableCarMutation,
 } from "../api/car.mutations";
 import type { CarListItem, CarSalesType } from "../types/car.types";
+import { FileText, Tag } from "lucide-react";
 
 // ----------------------------------------------------------------------
 
@@ -90,31 +91,38 @@ export default function CarListCard({ data, salesType }: Props) {
 
       {/* -- Info -- */}
       <div className="flex h-full flex-col px-5 py-4">
-        <div className="flex flex-row justify-between">
+        <div className="flex flex-row items-center justify-between">
           <p className="text-md">
             {modelYear} {model} {subModel}
           </p>
           <Switch
-            label={checked ? "แสดง" : "ซ่อน"}
+            label={checked ? "แสดง" : "ขายแล้ว"}
             checked={checked}
             disabled={isToggling}
             onCheckedChange={onToggleActive}
+            className="hidden md:flex"
           />
         </div>
         <p className="text-lg font-semibold">{fCurrency(price)} บาท</p>
-        <div className="flex gap-2 text-sm text-wrap text-gray-500">
-          <p className="flex-1">ทะเบียน : {newLicensePlate}</p>
-          <p className="flex-1">ประเภท: {type}</p>
+        <div className="flex flex-row text-sm text-wrap text-gray-500 md:gap-2">
+          <div className="flex flex-1 flex-row items-center gap-1">
+            <FileText className="size-4" />
+            <p className="text-secondary flex-1">ทะเบียน : {newLicensePlate}</p>
+          </div>
+          <div className="hidden flex-1 flex-row items-center gap-1 md:flex">
+            <Tag className="size-4" />
+            <p className="text-secondary flex-1">ประเภท: {type}</p>
+          </div>
         </div>
 
         <Divider className="my-3" />
 
         {/* -- Action -- */}
         <div className="flex flex-col gap-2 md:flex-row">
-          <Button size="lg" className="flex-1" onClick={onClickDetail}>
+          <Button color="secondary" className="flex-1" onClick={onClickDetail}>
             ดูรายละเอียด
           </Button>
-          <Button size="lg" className="flex-1" onClick={onClickEdit}>
+          <Button className="flex-1" onClick={onClickEdit}>
             แก้ไข
           </Button>
         </div>

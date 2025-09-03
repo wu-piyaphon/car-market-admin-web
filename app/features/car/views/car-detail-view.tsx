@@ -167,7 +167,7 @@ export default function CarDetailView({ salesType }: Props) {
             <div className="shrink-0">
               <div className={cn("h-2 w-2 rounded-full bg-current")} />
             </div>
-            {isActive ? "แสดง" : "ซ่อน"}
+            {isActive ? "แสดง" : "ขายแล้ว"}
           </Button>
         }
         onClick={handleBack}

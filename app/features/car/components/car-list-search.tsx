@@ -3,6 +3,7 @@ import Form from "~/components/form/form";
 import RHFTextField from "~/components/form/rhf-textfield";
 import { Button } from "~/components/ui/button";
 import { type CarListSearchSchema } from "../schemas/car-list-search";
+import { Plus } from "lucide-react";
 
 // ----------------------------------------------------------------------
 
@@ -24,10 +25,12 @@ export default function CarListSearch({
         />
 
         <Button
+          size="lg"
           type="button"
           onClick={onClickAdd}
-          className="hidden w-36 md:block"
+          className="hidden w-36 md:flex"
         >
+          <Plus />
           เพิ่มรถ
         </Button>
       </div>

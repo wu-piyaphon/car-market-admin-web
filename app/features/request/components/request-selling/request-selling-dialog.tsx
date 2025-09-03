@@ -1,5 +1,9 @@
 import type { DialogProps } from "@radix-ui/react-dialog";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import Form from "~/components/form/form";
+import RHFTextarea from "~/components/form/rhf-textarea";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -7,12 +11,8 @@ import {
   DialogFooter,
   DialogTitle,
 } from "~/components/ui/dialog";
-import type { RequestSellingItem } from "../../types/request-selling.types";
-import Form from "~/components/form/form";
-import { useForm } from "react-hook-form";
-import RHFTextarea from "~/components/form/rhf-textarea";
 import { useUpdateRequestSellingMutation } from "../../api/request.mutation";
-import { toast } from "sonner";
+import type { RequestSellingItem } from "../../types/request-selling.types";
 
 type Props = DialogProps & {
   detail: RequestSellingItem;
@@ -111,19 +111,19 @@ export default function RequestSellingDialog({
         </Form>
 
         <DialogFooter>
-          <div className="flex w-[50%] flex-row gap-2">
+          <div className="flex flex-row justify-end gap-2">
             <Button
-              onClick={() => onOpenChange(false)}
               variant="outline"
               disabled={isUpdatingRequest}
+              onClick={() => onOpenChange(false)}
               className={isContacted ? "hidden" : "block"}
             >
               ยกเลิก
             </Button>
             <Button
-              onClick={handleConfirm}
               variant="default"
               loading={isUpdatingRequest}
+              onClick={handleConfirm}
             >
               {isContacted ? "ปิด" : "ติดต่อแล้ว"}
             </Button>

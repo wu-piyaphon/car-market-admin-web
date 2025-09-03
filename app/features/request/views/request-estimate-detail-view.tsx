@@ -1,4 +1,4 @@
-import { Eye, SquarePen } from "lucide-react";
+import { SquarePen } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router";
 import { Button } from "~/components/ui/button";
@@ -28,7 +28,7 @@ export default function RequestEstimateDetailView() {
     return (
       <div className="mx-auto w-full max-w-7xl p-4.5 py-6">
         <div className="animate-pulse space-y-6">
-          <div className="h-16 rounded bg-gray-200"></div>
+          <div className="h-16 rounded-sm bg-gray-200"></div>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2">
               <div className="h-96 rounded-lg bg-gray-200"></div>
@@ -168,15 +168,11 @@ export default function RequestEstimateDetailView() {
               <div className="flex flex-col gap-3">
                 <Button
                   size="lg"
-                  color={isContacted ? "inherit" : "success"}
                   variant="default"
                   onClick={onClickAction}
+                  color={isContacted ? "inherit" : "default"}
                 >
-                  {isContacted ? (
-                    <SquarePen className="size-4.5" />
-                  ) : (
-                    <Eye className="size-4.5" />
-                  )}
+                  {isContacted && <SquarePen className="size-4.5" />}
                   {isContacted ? "ดูบันทึก" : "ติดต่อแล้ว"}
                 </Button>
               </div>

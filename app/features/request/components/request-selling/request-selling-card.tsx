@@ -6,8 +6,9 @@ import {
   CardFooter,
   CardHeader,
 } from "~/components/ui/card";
-import type { RequestSellingItem } from "../../types/request-selling.types";
 import { fDate } from "~/utils/format-string";
+import type { RequestSellingItem } from "../../types/request-selling.types";
+import { useMemo } from "react";
 
 type Props = {
   request: RequestSellingItem;
@@ -15,10 +16,22 @@ type Props = {
 };
 
 export default function RequestSellingCard({ request, onClick }: Props) {
-  const { status, firstName, lastName, nickname, phoneNumber, createdAt } =
-    request;
+  const {
+    status,
+    firstName,
+    lastName,
+    nickname,
+    phoneNumber,
+    createdAt,
+    type,
+  } = request;
 
   const isContacted = status === "CONTACTED";
+
+  const buttonColor = useMemo(() => {
+    if (isContacted) return "inherit";
+    return type === "OWNER" ? "success" : "default";
+  }, [isContacted, type]);
 
   return (
     <Card>
@@ -38,7 +51,11 @@ export default function RequestSellingCard({ request, onClick }: Props) {
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={() => onClick(request)}>
+        <Button
+          color={buttonColor}
+          className="flex-1"
+          onClick={() => onClick(request)}
+        >
           {isContacted && <SquarePen className="size-5" />}
           {isContacted ? "ดูบันทึก" : "ติดต่อ"}
         </Button>

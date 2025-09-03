@@ -43,9 +43,7 @@ export default function AppSidebar() {
                   return (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild isActive={isActive}>
-                        <Link to={item.url}>
-                          <span>{item.title}</span>
-                        </Link>
+                        <Link to={item.url}>{item.title}</Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );
