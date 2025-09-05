@@ -12,6 +12,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           title: "!font-bold",
+          description: "!text-foreground",
         },
       }}
       style={
