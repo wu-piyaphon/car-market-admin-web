@@ -15,6 +15,7 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { NAV_CONFIG } from "./nav-config";
+import { Car } from "lucide-react";
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +31,10 @@ export default function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <h6>Good Car Market CMS</h6>
+        <h6 className="whitespace-pre-line">
+          {`Good Car Market\nCMS`}{" "}
+          <Car className="mb-1 ml-2 inline-block text-sky-500 dark:text-white" />
+        </h6>
       </SidebarHeader>
       <SidebarContent>
         {NAV_CONFIG.map(group => (
