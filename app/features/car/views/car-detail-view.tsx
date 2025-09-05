@@ -15,7 +15,7 @@ import EmptyContent from "~/components/ui/empty-content";
 import { useRouter } from "~/hooks/use-router";
 import { paths } from "~/lib/paths";
 import { cn } from "~/lib/utils";
-import { fCurrency } from "~/utils/format-string";
+import { fCapitalize, fCurrency } from "~/utils/format-string";
 import {
   useActivateCarMutation,
   useDeleteCarMutation,
@@ -98,11 +98,11 @@ export default function CarDetailView({ salesType }: Props) {
     { label: "รุ่นรถ", value: model },
     { label: "รุ่นย่อย", value: subModel },
     { label: "ปีรถ", value: modelYear },
-    { label: "สีรถ", value: color },
-    { label: "ระบบเกียร์", value: transmission },
-    { label: "ประเภทเครื่องยนต์", value: engineType },
-    { label: "ขนาดเครื่องยนต์ CC", value: engineCapacity },
-    { label: "เลขไมล์", value: mileage || "-" },
+    { label: "สีรถ", value: fCapitalize(color) },
+    { label: "ระบบเกียร์", value: fCapitalize(transmission) },
+    { label: "ประเภทเครื่องยนต์", value: fCapitalize(engineType) },
+    { label: "ขนาดเครื่องยนต์ CC", value: fCurrency(engineCapacity) },
+    { label: "เลขไมล์", value: mileage ? fCurrency(mileage) : "-" },
   ];
 
   const plateDetail = [
