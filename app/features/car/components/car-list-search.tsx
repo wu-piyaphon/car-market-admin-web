@@ -18,7 +18,7 @@ export default function CarListSearch({
 }: CarListSearchProps) {
   return (
     <Form methods={methods}>
-      <div className="mb-4 flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <RHFTextField
           name="keyword"
           placeholder="ค้นหารถด้วยชื่อรถยนต์และเลขทะเบียน"

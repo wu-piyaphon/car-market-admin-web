@@ -26,7 +26,7 @@ export default function CarListView({ salesType }: Props) {
   const router = useRouter();
 
   const pagination = usePagination({
-    rowsPerPage: 9,
+    rowsPerPage: 6,
   });
 
   const searchMethods = useForm<CarListSearchSchema>({
@@ -70,39 +70,42 @@ export default function CarListView({ salesType }: Props) {
   // ----------------------------------------------------------------------
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-row items-center justify-between">
-        <h1>รายการรถแชมป์</h1>
+    <div className="flex h-full flex-col">
+      <div className="mb-3 flex flex-row items-center justify-between">
+        <h1 className="text-2xl font-bold">{`รายการรถ${salesType === "OWNER" ? "แชมป์" : "ฝากขาย"}`}</h1>
         <Button onClick={onClickAdd} className="block w-24 md:hidden">
           เพิ่มรถ
         </Button>
       </div>
-      <CarListSearch methods={searchMethods} onClickAdd={onClickAdd} />
 
-      {isLoading && (
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {[...Array(3)].map((_, idx) => (
-            <CarListCardSkeleton key={idx} />
-          ))}
-        </div>
-      )}
+      <div className="flex grow flex-col gap-8 pb-10">
+        <CarListSearch methods={searchMethods} onClickAdd={onClickAdd} />
 
-      {isEmpty && (
-        <EmptyContent title="ไม่พบรถ" description="ไม่มีรถที่ตรงกับการค้นหา" />
-      )}
+        {isLoading && (
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {[...Array(3)].map((_, idx) => (
+              <CarListCardSkeleton key={idx} />
+            ))}
+          </div>
+        )}
 
-      {hasData && (
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {data.items.map(car => (
-            <CarListCard key={car.id} data={car} salesType={salesType} />
-          ))}
-        </div>
-      )}
+        {isEmpty && (
+          <EmptyContent
+            title="ไม่พบรถ"
+            description="ไม่มีรถที่ตรงกับการค้นหา"
+          />
+        )}
 
-      <CustomPagination
-        pagination={pagination}
-        className="mt-8 flex justify-center"
-      />
+        {hasData && (
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {data.items.map(car => (
+              <CarListCard key={car.id} data={car} salesType={salesType} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <CustomPagination pagination={pagination} />
     </div>
   );
 }

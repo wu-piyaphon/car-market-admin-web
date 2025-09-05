@@ -152,7 +152,7 @@ export default function CarDetailView({ salesType }: Props) {
   };
 
   return (
-    <div className="mx-auto w-full max-w-7xl p-4.5 py-6">
+    <>
       <CarHeader
         title={`${modelYear} ${brand.name} ${model}`}
         description={newLicensePlate}
@@ -281,6 +281,6 @@ export default function CarDetailView({ salesType }: Props) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }

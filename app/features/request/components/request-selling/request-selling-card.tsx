@@ -40,7 +40,7 @@ export default function RequestSellingCard({ request, onClick }: Props) {
           {firstName} {lastName} ({nickname})
         </h6>
       </CardHeader>
-      <CardContent className="flex flex-1 flex-col justify-center">
+      <CardContent className="flex flex-1 flex-col justify-center gap-2">
         <div className="flex items-center gap-2">
           <Phone className="size-4.5" />
           <p className="text-sm">{phoneNumber}</p>

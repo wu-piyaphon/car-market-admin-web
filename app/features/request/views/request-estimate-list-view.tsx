@@ -70,43 +70,40 @@ export default function RequestEstimateListView({ tabCounts }: Props) {
   // ----------------------------------------------------------------------
 
   return (
-    <Form methods={methods}>
+    <div className="flex h-full flex-col">
       <RequestHeader
         title="คำขอประเมินราคารถ"
         description="ข้อมูลลูกค้าที่ต้องการประเมินราคารถ"
       />
 
-      <RHFTextField
-        name="keyword"
-        placeholder="ค้นหาด้วยชื่อ, นามสกุล, ชื่อเล่นหรือเบอร์โทรศัพท์"
-        className="mb-2"
-      />
+      <Form methods={methods}>
+        <RHFTextField
+          name="keyword"
+          placeholder="ค้นหาด้วยชื่อ, นามสกุล, ชื่อเล่นหรือเบอร์โทรศัพท์"
+          className="mb-2"
+        />
+      </Form>
 
       <RequestStatusTabs
         count={tabCounts}
         onChangeStatus={handleChangeStatus}
       />
 
-      <div className="flex min-h-0 flex-1 flex-col">
-        <div className="min-h-[750px] flex-1">
-          {isLoading && <RequestListSkeleton />}
+      <div className="flex grow flex-col">
+        {isLoading && <RequestListSkeleton />}
 
-          {isEmpty && <RequestListEmpty />}
+        {isEmpty && <RequestListEmpty />}
 
-          {hasData && (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {data.items.map(request => (
-                <RequestEstimateCard key={request.id} request={request} />
-              ))}
-            </div>
-          )}
-        </div>
-
-        <CustomPagination
-          pagination={pagination}
-          className="mt-8 flex justify-center"
-        />
+        {hasData && (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {data.items.map(request => (
+              <RequestEstimateCard key={request.id} request={request} />
+            ))}
+          </div>
+        )}
       </div>
-    </Form>
+
+      <CustomPagination pagination={pagination} />
+    </div>
   );
 }

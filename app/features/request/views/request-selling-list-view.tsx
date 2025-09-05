@@ -86,7 +86,7 @@ export default function RequestSellingListView({
   // ----------------------------------------------------------------------
 
   return (
-    <Form methods={methods}>
+    <div className="flex h-full flex-col">
       <RequestHeader
         title={salesType === "CONSIGNMENT" ? "คำขอฝากขายรถ" : "คำขอขายรถ"}
         description={
@@ -96,49 +96,46 @@ export default function RequestSellingListView({
         }
       />
 
-      <RHFTextField
-        name="keyword"
-        placeholder="ค้นหาด้วยชื่อ, นามสกุล, ชื่อเล่นหรือเบอร์โทรศัพท์"
-        className="mb-2"
-      />
+      <Form methods={methods}>
+        <RHFTextField
+          name="keyword"
+          placeholder="ค้นหาด้วยชื่อ, นามสกุล, ชื่อเล่นหรือเบอร์โทรศัพท์"
+          className="mb-2"
+        />
+      </Form>
 
       <RequestStatusTabs
         count={tabCounts}
         onChangeStatus={handleChangeStatus}
       />
 
-      <div className="flex min-h-0 flex-1 flex-col">
-        <div className="min-h-[750px] flex-1">
-          {isLoading && <RequestListSkeleton />}
+      <div className="flex grow flex-col">
+        {isLoading && <RequestListSkeleton />}
 
-          {isEmpty && <RequestListEmpty />}
+        {isEmpty && <RequestListEmpty />}
 
-          {hasData && (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {data.items.map(request => (
-                <RequestSellingCard
-                  key={request.id}
-                  request={request}
-                  onClick={onClickContact}
-                />
-              ))}
+        {hasData && (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {data.items.map(request => (
+              <RequestSellingCard
+                key={request.id}
+                request={request}
+                onClick={onClickContact}
+              />
+            ))}
 
-              {selected && (
-                <RequestSellingDialog
-                  detail={selected}
-                  open={dialogOpen}
-                  onOpenChange={setDialogOpen}
-                />
-              )}
-            </div>
-          )}
-        </div>
-
-        <CustomPagination
-          pagination={pagination}
-          className="mt-8 flex justify-center"
-        />
+            {selected && (
+              <RequestSellingDialog
+                detail={selected}
+                open={dialogOpen}
+                onOpenChange={setDialogOpen}
+              />
+            )}
+          </div>
+        )}
       </div>
-    </Form>
+
+      <CustomPagination pagination={pagination} />
+    </div>
   );
 }

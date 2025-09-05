@@ -94,7 +94,7 @@ export default function RequestEstimateDetailView() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-7xl p-4.5 py-6">
+    <>
       <CarHeader
         title="คำขอประเมินราคารถ"
         description="ข้อมูลประเมินราคารถ"
@@ -186,6 +186,6 @@ export default function RequestEstimateDetailView() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
       />
-    </div>
+    </>
   );
 }
