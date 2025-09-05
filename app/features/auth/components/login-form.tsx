@@ -41,7 +41,9 @@ export default function LoginForm({
       log.error(error);
       toast.error("Login failed!", {
         description:
-          error instanceof ApiError ? error.message : "Please try again later",
+          error instanceof ApiError
+            ? error.message
+            : "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่",
       });
     }
   });
