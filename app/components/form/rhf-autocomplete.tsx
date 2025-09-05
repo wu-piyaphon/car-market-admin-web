@@ -100,7 +100,7 @@ export default function RHFAutocomplete({
                       <img
                         src={selectedOption.image}
                         alt={selectedOption.name}
-                        className="h-4 w-4"
+                        className="h-5 w-5 object-contain object-center"
                       />
                     )}
                     <span className="truncate">
@@ -144,7 +144,7 @@ export default function RHFAutocomplete({
                               <img
                                 src={option.image}
                                 alt={option.name}
-                                className="mr-2 h-4 w-4"
+                                className="mr-2 h-5 w-5 object-contain object-center"
                               />
                             )}
                             {option.name}
