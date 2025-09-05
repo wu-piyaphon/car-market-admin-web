@@ -14,6 +14,8 @@ import {
 } from "~/components/ui/dialog";
 import { useUpdateRequestEstimateMutation } from "../../api/request.mutation";
 import type { RequestEstimateDetail } from "../../types/request-estimate.types";
+import { log } from "~/utils/log";
+import { ApiError } from "~/lib/api/types/axios.types";
 
 type Props = DialogProps & {
   detail: RequestEstimateDetail;
@@ -62,10 +64,12 @@ export default function RequestEstimateDialog({
       onOpenChange(false);
       reset();
     } catch (error) {
-      console.error("Failed to update estimate request:", error);
+      log.error(error);
       toast.error("เกิดข้อผิดพลาด", {
         description:
-          error instanceof Error ? error.message : "ไม่สามารถเปลี่ยนสถานะได้",
+          error instanceof ApiError
+            ? error.message
+            : "ไม่สามารถเปลี่ยนสถานะได้",
       });
     }
   };

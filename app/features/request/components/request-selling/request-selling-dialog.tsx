@@ -13,6 +13,8 @@ import {
 } from "~/components/ui/dialog";
 import { useUpdateRequestSellingMutation } from "../../api/request.mutation";
 import type { RequestSellingItem } from "../../types/request-selling.types";
+import { log } from "~/utils/log";
+import { ApiError } from "~/lib/api/types/axios.types";
 
 type Props = DialogProps & {
   detail: RequestSellingItem;
@@ -61,10 +63,12 @@ export default function RequestSellingDialog({
       onOpenChange(false);
       reset();
     } catch (error) {
-      console.error("Failed to update car status:", error);
+      log.error(error);
       toast.error("เกิดข้อผิดพลาด", {
         description:
-          error instanceof Error ? error.message : "ไม่สามารถเปลี่ยนสถานะรถได้",
+          error instanceof ApiError
+            ? error.message
+            : "ไม่สามารถเปลี่ยนสถานะรถได้",
       });
     }
   };

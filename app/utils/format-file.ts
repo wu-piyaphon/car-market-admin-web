@@ -1,3 +1,5 @@
+import { log } from "./log";
+
 /**
  * Convert image URLs to File objects for form submission
  * @param imageUrls Array of image URLs
@@ -48,7 +50,7 @@ export async function formatImageUrlsToFiles(
       const file = new File([blob], fileName, { type: blob.type });
       files.push(file);
     } catch (error) {
-      console.error(`Error converting image URL to file: ${url}`, error);
+      log.error(error);
     }
   }
 

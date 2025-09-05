@@ -26,6 +26,8 @@ import CarDetailCarousel from "../components/car-detail-carousel";
 import CarDetailSkeleton from "../components/car-detail-skeleton";
 import CarHeader from "../components/car-header";
 import type { CarSalesType } from "../types/car.types";
+import { log } from "~/utils/log";
+import { ApiError } from "~/lib/api/types/axios.types";
 
 type Props = {
   salesType: CarSalesType;
@@ -117,10 +119,12 @@ export default function CarDetailView({ salesType }: Props) {
       }
       toast.success("สำเร็จ", { description: "เปลี่ยนสถานะรถเรียบร้อยแล้ว" });
     } catch (error) {
-      console.error("Failed to update car status:", error);
+      log.error(error);
       toast.error("เกิดข้อผิดพลาด", {
         description:
-          error instanceof Error ? error.message : "ไม่สามารถเปลี่ยนสถานะรถได้",
+          error instanceof ApiError
+            ? error.message
+            : "ไม่สามารถเปลี่ยนสถานะรถได้",
       });
     }
   };
@@ -131,10 +135,10 @@ export default function CarDetailView({ salesType }: Props) {
       toast.success("สำเร็จ", { description: "ลบรถคันนี้เรียบร้อยแล้ว" });
       handleBack();
     } catch (error) {
-      console.error("Failed to delete car:", error);
+      log.error(error);
       toast.error("เกิดข้อผิดพลาด", {
         description:
-          error instanceof Error ? error.message : "ไม่สามารถลบรถคันนี้ได้",
+          error instanceof ApiError ? error.message : "ไม่สามารถลบรถคันนี้ได้",
       });
     }
   };

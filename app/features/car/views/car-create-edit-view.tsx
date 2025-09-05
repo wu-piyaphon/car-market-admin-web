@@ -32,6 +32,8 @@ import {
 import { carCreateSchema, type CarCreateSchema } from "../schemas/car-create";
 import type { Car, CarSalesType } from "../types/car.types";
 import { fCapitalize } from "~/utils/format-string";
+import { ApiError } from "~/lib/api/types/axios.types";
+import { log } from "~/utils/log";
 
 type Props = {
   carData?: Car;
@@ -130,10 +132,10 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
           : "เพิ่มรถใหม่เรียบร้อยแล้ว",
       });
     } catch (error) {
-      console.error("Error creating car:", error);
+      log.error(error);
       toast.error("เกิดข้อผิดพลาด", {
         description:
-          error instanceof Error ? error.message : "ไม่สามารถเพิ่มรถใหม่ได้",
+          error instanceof ApiError ? error.message : "ไม่สามารถเพิ่มรถใหม่ได้",
       });
     }
   };

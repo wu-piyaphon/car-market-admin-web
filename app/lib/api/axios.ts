@@ -6,13 +6,40 @@ import type {
   InternalAxiosRequestConfig,
 } from "axios";
 import { tokenManager } from "./token-manager";
-import type { TQueue } from "./types/axios.types";
+import type { TQueue, ApiErrorResponse } from "./types/axios.types";
+import { ApiError } from "./types/axios.types";
 import { endpoints } from "./endpoints";
 
 // ----------------------------------------------------------------------
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+
+// ----------------------------------------------------------------------
+// Error handling utility
+
+const handleApiError = (error: unknown): never => {
+  // If error has response data (axios error)
+  if (error && typeof error === "object" && "response" in error) {
+    const axiosError = error as { response?: { data: ApiErrorResponse } };
+    if (axiosError.response?.data) {
+      throw new ApiError(axiosError.response.data);
+    }
+  }
+
+  // If it's already an ApiError, re-throw it
+  if (error instanceof ApiError) {
+    throw error;
+  }
+
+  // For network errors or other issues
+  if (error instanceof Error && error.message) {
+    throw new Error(error.message);
+  }
+
+  // Fallback error
+  throw new Error("An unexpected error occurred");
+};
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -129,9 +156,7 @@ export const api = {
     axiosInstance
       .get<T>(url, config)
       .then(res => res.data)
-      .catch(error => {
-        throw new Error(error.response.data.message);
-      }),
+      .catch(handleApiError),
 
   post: <T = unknown>(
     url: string,
@@ -141,9 +166,7 @@ export const api = {
     axiosInstance
       .post<T>(url, data, config)
       .then(res => res.data)
-      .catch(error => {
-        throw new Error(error.response.data.message);
-      }),
+      .catch(handleApiError),
 
   put: <T = unknown>(
     url: string,
@@ -153,17 +176,13 @@ export const api = {
     axiosInstance
       .put<T>(url, data, config)
       .then(res => res.data)
-      .catch(error => {
-        throw new Error(error.response.data.message);
-      }),
+      .catch(handleApiError),
 
   delete: <T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> =>
     axiosInstance
       .delete<T>(url, config)
       .then(res => res.data)
-      .catch(error => {
-        throw new Error(error.response.data.message);
-      }),
+      .catch(handleApiError),
 };
 
 export default axiosInstance;

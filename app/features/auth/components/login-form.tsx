@@ -10,6 +10,8 @@ import { loginSchema, type TLoginSchema } from "../schemas/login";
 import HelperText from "~/components/form/helper-text";
 import { useAuthContext } from "../context/auth-context";
 import { toast } from "sonner";
+import { ApiError } from "~/lib/api/types/axios.types";
+import { log } from "~/utils/log";
 
 // ----------------------------------------------------------------------
 
@@ -36,9 +38,10 @@ export default function LoginForm({
     try {
       await login(data.email, data.password);
     } catch (error) {
+      log.error(error);
       toast.error("Login failed!", {
         description:
-          error instanceof Error ? error.message : "Please try again later",
+          error instanceof ApiError ? error.message : "Please try again later",
       });
     }
   });

@@ -9,6 +9,7 @@ import { tokenManager } from "~/lib/api/token-manager";
 import { AUTH_API } from "../api/auth.api";
 import type { AuthContextValue, AuthUser } from "../types/auth.types";
 import { useGetMeMutation } from "../api/auth.mutations";
+import { ApiError } from "~/lib/api/types/axios.types";
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
@@ -29,7 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       initialize();
     } catch (err) {
       setUser(null);
-      throw new Error(err instanceof Error ? err.message : "Login failed");
+      throw new Error(err instanceof ApiError ? err.message : "Login failed");
     } finally {
       setLoading(false);
     }
