@@ -78,7 +78,7 @@ export default function CarListView({ salesType }: Props) {
         </Button>
       </div>
 
-      <div className="flex grow flex-col gap-8 pb-10">
+      <div className="flex grow flex-col gap-8 pb-5 md:pb-8">
         <CarListSearch methods={searchMethods} onClickAdd={onClickAdd} />
 
         {isLoading && (

@@ -109,7 +109,7 @@ export default function RequestSellingListView({
         onChangeStatus={handleChangeStatus}
       />
 
-      <div className="flex grow flex-col pb-10">
+      <div className="flex grow flex-col pb-5 md:pb-8">
         {isLoading && <RequestListSkeleton />}
 
         {isEmpty && <RequestListEmpty />}
