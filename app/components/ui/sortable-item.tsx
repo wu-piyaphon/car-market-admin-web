@@ -54,7 +54,7 @@ export function SortableItem({
         <div
           {...attributes}
           {...listeners}
-          className="absolute inset-0 cursor-grab bg-transparent transition-colors hover:bg-black/5 active:cursor-grabbing"
+          className="absolute inset-0 cursor-grab bg-transparent transition-colors active:cursor-grabbing"
         />
       )}
 
