@@ -10,7 +10,7 @@ Car Market Admin Web is a comprehensive admin panel designed for managing a car 
 - **Owner Cars** - Cars sold directly to marketplace owner
 - **Consignment Cars** - Cars sold on consignment
 
-The platform provides complete CRUD operations for car management, request handling, and user authentication with a clean, responsive UI.
+The platform provides complete CRUD operations for car management, request handling, and user authentication.
 
 ## 🌟 Features
 
@@ -114,10 +114,10 @@ yarn install
 ```
 
 3. **Environment setup**
-   ```bash
+```bash
    cp .env.example .env.local
    # Configure your environment variables
-   ```
+```
 
 4. **Start the development server**
 ```bash
@@ -146,6 +146,8 @@ yarn typecheck    # Run TypeScript type checking
 The project follows a feature-based architecture where each feature (`auth`, `car`, `request`) contains:
 - **API layer**: API calls, React Query hooks, and mutations
 - **Components**: Feature-specific UI components
+- **Constants**: Feature-specific Constants
+- **Hooks**: Feature-specific Custom hooks
 - **Schemas**: Zod validation schemas
 - **Types**: TypeScript type definitions
 - **Views**: Page-level components
@@ -160,25 +162,6 @@ The project follows a feature-based architecture where each feature (`auth`, `ca
 - TanStack Query for data-fetching and state management
 - React Hook Form for form state
 - Local component state with React hooks
-
-## 🎯 Key Features in Detail
-
-### Car Management System
-- Content management CRUD system
-- Brand, category, and car types management
-- Image upload with preview
-- Drag-and-drop for images ordering
-
-### Request Management
-- **Selling Requests**: Handle customer requests to sell cars
-- **Estimate Requests**: Manage car valuation requests
-- Status tracking and updates
-- Detailed request information
-
-### Form Handling
-- Type-safe forms with React Hook Form + Zod
-- Real-time validation
-- Error handling and user feedback
 
 ## 📈 Performance Optimizations
 
