@@ -1,87 +1,188 @@
-# Welcome to React Router!
+# Car Market Admin Web
 
-A modern, production-ready template for building full-stack React applications using React Router.
+[![My Skills](https://skillicons.dev/icons?i=ts,html,css,react,tailwind,vite)](https://skillicons.dev)
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+A modern, feature-rich admin dashboard for managing car marketplace operations. Built with React Router v7, TypeScript, TailwindCSS, and a comprehensive set of modern web technologies.
 
-## Features
+## About the Project
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+Car Market Admin Web is a comprehensive admin panel designed for managing a car marketplace platform. The system supports two main types of car sales:
+- **Owner Cars** - Cars sold directly to marketplace owner
+- **Consignment Cars** - Cars sold on consignment
 
-## Getting Started
+The platform provides complete CRUD operations for car management, request handling, and user authentication with a clean, responsive UI.
+
+## 🌟 Features
+
+### Authentication
+- Secure login system with JWT token management
+- Automatic token refresh
+- Protected routes and role-based access
+
+### Car Management
+- **Add/Edit Cars**: Complete car information form with image upload
+- **Car Listings**: Paginated car lists with search and filtering
+- **Car Details**: Comprehensive car detail view with image carousel
+- **Status Management**: Activate/deactivate cars
+
+### Request Management
+- **Selling Requests**: Handle car selling requests from customers
+- **Estimate Requests**: Manage car valuation requests
+- **Status Tracking**: Track and update request statuses
+
+### Modern UI/UX
+- **Responsive Design**: Mobile-first approach with TailwindCSS
+- **Dark/Light Theme**: Theme switching capability
+- **Component Library**: Built with Radix UI components
+- **Drag & Drop**: File upload with drag-and-drop support
+- **Loading States**: Comprehensive loading and skeleton screens
+
+## ⚙️ Tech Stack
+
+### Frontend Framework
+- **React Router v7** - Latest routing solution
+- **TypeScript** - Type-safe development
+- **Vite** - Fast build tool and dev server
+
+### Styling & UI
+- **TailwindCSS v4** - Utility-first CSS framework
+- **Shadcn/Radix UI** - Accessible component primitives
+- **Lucide React** - Beautiful icon library
+- **Embla Carousel** - Touch-friendly carousel component
+
+### State Management & Data Fetching
+- **TanStack Query (React Query)** - Powerful data synchronization
+- **Axios** - HTTP client with interceptors
+- **React Hook Form** - Performant forms with easy validation
+
+### Form Validation
+- **Zod** - TypeScript-first schema validation
+- **@hookform/resolvers** - Form validation integration
+
+### Development Tools
+- **ESLint** - Code linting with TypeScript support
+- **Prettier** - Code formatting
+- **Lefthook** - Git hooks management
+- **Docker** - Containerization support
+
+## 📂 Project Structure
+
+```
+app/
+├── components/          # Reusable UI components
+│   ├── ui/              # Basic UI components (Shadcn/UI)
+│   ├── form/            # React Hook Form components
+│   ├── layout/          # Layout components (sidebar, topbar)
+│   └── custom/          # Custom business components
+├── features/            # Feature-based modules
+│   ├── module/         # Feature module
+│   │   ├── api/        # API calls & React Query hooks
+│   │   ├── components/ # Feature-specific components
+│   │   ├── hooks/      # Custom hooks for specific feature
+│   │   ├── schemas/    # Form validation schemas
+│   │   ├── constants/  # Feature-specific constants
+│   │   ├── types/      # TypeScript definitions
+│   │   └── views/      # Page-level components
+├── hooks/               # Custom React hooks
+├── lib/                 # Shared utilities and configurations
+│   ├── api/             # Axios setup & API layer
+│   ├── schemas/         # Shared validation schemas
+├── routes/             # Page components (React Router)
+│   ├── car/            # Car-related routes
+│   └── request/        # Request-related routes
+├── types/              # Global TypeScript definitions
+└── utils/              # Utility functions
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn package manager
 
 ### Installation
 
-Install the dependencies:
+1. **Clone the repository**
+```bash
+git clone https://github.com/wu-piyaphon/car-market-admin-web.git
+cd car-market-admin-web
+```
+
+2. **Install dependencies**
+```bash
+yarn install
+```
+
+3. **Environment setup**
+   ```bash
+   cp .env.example .env.local
+   # Configure your environment variables
+   ```
+
+4. **Start the development server**
+```bash
+yarn dev
+```
+
+5. **Open your browser and navigate to `http://localhost:5173`**
+
+### Available Scripts
 
 ```bash
-npm install
+# Development
+yarn dev          # Start development server
+
+# Building
+yarn build        # Build for production
+yarn start        # Start production server
+
+# Code Quality
+yarn typecheck    # Run TypeScript type checking
 ```
 
-### Development
+## 🛠️ Architecture
 
-Start the development server with HMR:
+### Feature-Based Structure
+The project follows a feature-based architecture where each feature (`auth`, `car`, `request`) contains:
+- **API layer**: API calls, React Query hooks, and mutations
+- **Components**: Feature-specific UI components
+- **Schemas**: Zod validation schemas
+- **Types**: TypeScript type definitions
+- **Views**: Page-level components
 
-```bash
-npm run dev
-```
+### API Integration
+- Centralized API configuration with Axios
+- Automatic request/response interceptors
+- Token management with refresh logic
+- Type-safe API endpoints
 
-Your application will be available at `http://localhost:5173`.
+### State Management
+- TanStack Query for data-fetching and state management
+- React Hook Form for form state
+- Local component state with React hooks
 
-## Building for Production
+## 🎯 Key Features in Detail
 
-Create a production build:
+### Car Management System
+- Content management CRUD system
+- Brand, category, and car types management
+- Image upload with preview
+- Drag-and-drop for images ordering
 
-```bash
-npm run build
-```
+### Request Management
+- **Selling Requests**: Handle customer requests to sell cars
+- **Estimate Requests**: Manage car valuation requests
+- Status tracking and updates
+- Detailed request information
 
-## Deployment
+### Form Handling
+- Type-safe forms with React Hook Form + Zod
+- Real-time validation
+- Error handling and user feedback
 
-### Docker Deployment
+## 📈 Performance Optimizations
 
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+- Code splitting with React Router
+- React Query caching strategies
+- Debounced search inputs
+- Skeleton loading states
