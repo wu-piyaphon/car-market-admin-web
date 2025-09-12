@@ -1,10 +1,10 @@
-# Car Market Admin Web
+# Car Marketplace - Admin Web
 
 [![My Skills](https://skillicons.dev/icons?i=ts,html,css,react,tailwind,vite)](https://skillicons.dev)
 
 A modern, feature-rich admin dashboard for managing car marketplace operations. Built with React Router v7, TypeScript, TailwindCSS, and a comprehensive set of modern web technologies.
 
-## About the Project
+## Overview
 
 Car Market Admin Web is a comprehensive admin panel designed for managing a car marketplace platform. The system supports two main types of car sales:
 - **Owner Cars** - Cars sold directly to marketplace owner
