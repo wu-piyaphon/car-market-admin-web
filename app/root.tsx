@@ -14,7 +14,7 @@ import { ModeToggle } from "./components/mode-toggle";
 import { ThemeProvider } from "./components/theme-provider";
 import { LoadingOverlay } from "./components/ui/loading";
 import { Toaster } from "./components/ui/sonner";
-import { AuthProvider } from "./features/auth/context/auth-context";
+import { AuthProvider } from "./features/auth/hooks/auth-context";
 import { useRouter } from "./hooks/use-router";
 import { queryClient } from "./lib/query-client";
 

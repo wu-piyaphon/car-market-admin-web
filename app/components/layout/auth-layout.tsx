@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router";
-import { useAuthContext } from "~/features/auth/context/auth-context";
+import { useAuthContext } from "~/features/auth/hooks/auth-context";
 import { useRouter } from "~/hooks/use-router";
 import { paths } from "~/lib/paths";
 

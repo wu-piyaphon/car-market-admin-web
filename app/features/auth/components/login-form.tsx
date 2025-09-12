@@ -8,7 +8,7 @@ import { cn } from "~/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type TLoginSchema } from "../schemas/login";
 import HelperText from "~/components/form/helper-text";
-import { useAuthContext } from "../context/auth-context";
+import { useAuthContext } from "../hooks/auth-context";
 import { toast } from "sonner";
 import { ApiError } from "~/lib/api/types/axios.types";
 import { log } from "~/utils/log";

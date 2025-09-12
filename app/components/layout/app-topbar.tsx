@@ -1,4 +1,4 @@
-import { useAuthContext } from "~/features/auth/context/auth-context";
+import { useAuthContext } from "~/features/auth/hooks/auth-context";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { SidebarTrigger } from "../ui/sidebar";
 import { useResponsive } from "~/hooks/use-responsive";

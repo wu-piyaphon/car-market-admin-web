@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router";
-import { useAuthContext } from "~/features/auth/context/auth-context";
+import { useAuthContext } from "~/features/auth/hooks/auth-context";
 import { useRouter } from "~/hooks/use-router";
 import Container from "../ui/container";
 import { LoadingLayout } from "../ui/loading";

@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router";
-import { useAuthContext } from "~/features/auth/context/auth-context";
+import { useAuthContext } from "~/features/auth/hooks/auth-context";
 import { Button } from "../ui/button";
 import Divider from "../ui/divider";
 import {
