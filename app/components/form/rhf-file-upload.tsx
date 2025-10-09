@@ -57,8 +57,6 @@ export default function RHFFileUpload({
       control={control}
       name={name}
       render={({ field: { value }, fieldState: { error } }) => {
-        console.log("🚀 ~ RHFFileUpload ~ value:", value);
-        console.log("🚀 ~ RHFFileUpload ~ fields:", fields);
         return (
           <div className="space-y-2">
             {label && <Label htmlFor={name}>{label}</Label>}
