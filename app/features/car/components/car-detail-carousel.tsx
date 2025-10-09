@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -28,11 +28,39 @@ export default function CarDetailCarousel({
   const [current, setCurrent] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const thumbnailRef = useRef<HTMLDivElement>(null);
 
   const handleImageClick = (index: number) => {
     setSelectedImageIndex(index);
     setDialogOpen(true);
   };
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!api || images.length === 0) return;
+
+      e.preventDefault();
+
+      if (e.key === "ArrowLeft") {
+        const prevIndex =
+          selectedImageIndex > 0 ? selectedImageIndex - 1 : images.length - 1;
+
+        setSelectedImageIndex(prevIndex);
+        api.scrollTo(prevIndex);
+      } else if (e.key === "ArrowRight") {
+        const nextIndex =
+          selectedImageIndex < images.length - 1 ? selectedImageIndex + 1 : 0;
+        setSelectedImageIndex(nextIndex);
+        api.scrollTo(nextIndex);
+      } else if (e.key === "Escape" && dialogOpen) {
+        setDialogOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [api, images.length, dialogOpen, selectedImageIndex]);
 
   useEffect(() => {
     if (!api) {
@@ -76,34 +104,30 @@ export default function CarDetailCarousel({
       </Carousel>
 
       {/* Thumbnail Gallery Carousel */}
-      <Carousel
-        opts={{
-          align: "start",
-          dragFree: true,
-        }}
-        className="w-full"
+      <div
+        ref={thumbnailRef}
+        className="scrollbar-hide flex gap-2 overflow-x-auto pb-2"
+        style={{ scrollBehavior: "smooth" }}
       >
-        <CarouselContent className="mr-0.5 -ml-1.5 pt-1">
-          {images.map((image, index) => (
-            <CarouselItem key={index} className="basis-auto pl-2">
-              <button
-                onClick={() => api?.scrollTo(index)}
-                className={cn(
-                  "flex-shrink-0 rounded-md",
-                  current === index + 1
-                    ? "outline-2 outline-blue-500"
-                    : "cursor-pointer hover:opacity-80"
-                )}
-              >
-                <img
-                  src={image}
-                  className="h-16 w-20 rounded-md object-cover"
-                />
-              </button>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
+        {images.map((image, index) => (
+          <button
+            key={index}
+            onClick={() => api?.scrollTo(index)}
+            className={cn(
+              "flex-shrink-0 rounded-md transition-all",
+              current === index + 1
+                ? "outline-2 outline-offset-1 outline-blue-500"
+                : "cursor-pointer hover:opacity-80"
+            )}
+          >
+            <img
+              src={image}
+              alt={`Thumbnail ${index + 1}`}
+              className="h-16 w-20 rounded-md object-cover"
+            />
+          </button>
+        ))}
+      </div>
 
       {/* Image Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
