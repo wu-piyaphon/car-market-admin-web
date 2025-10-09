@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import type { ReactNode } from "react";
 import {
   DndContext,
@@ -10,18 +10,17 @@ import {
   type DragEndEvent,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import { cn } from "~/lib/utils";
+import type { UseFieldArrayMove } from "react-hook-form";
 
 export type SortableGridProps<T> = {
   items: T[];
-  onReorder: (items: T[]) => void;
+  onReorder: UseFieldArrayMove;
   renderItem: (item: T, index: number) => ReactNode;
-  getItemId: (item: T, index: number) => string;
   className?: string;
   gridCols?: string;
   gap?: string;
@@ -32,12 +31,27 @@ export function SortableGrid<T>({
   items,
   onReorder,
   renderItem,
-  getItemId,
   className,
   gridCols = "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",
   gap = "gap-4",
   disabled = false,
 }: SortableGridProps<T>) {
+  // Use ref to store current items to avoid stale closures
+  const itemsRef = useRef(items);
+  itemsRef.current = items;
+
+  // Memoize item IDs and create index map for fast lookups
+  const { itemIds, idToIndexMap } = useMemo(() => {
+    const ids = items.map((_, index) => `file-${index}`);
+    const indexMap = new Map<string, number>();
+    ids.forEach((id, index) => indexMap.set(id, index));
+
+    return {
+      itemIds: ids,
+      idToIndexMap: indexMap,
+    };
+  }, [items]);
+
   // Set up sensors for drag and drop
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -50,26 +64,24 @@ export function SortableGrid<T>({
     })
   );
 
-  // Handle drag end event
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
 
-      if (active.id !== over?.id) {
-        const oldIndex = items.findIndex(
-          (item, index) => getItemId(item, index) === active.id
-        );
-        const newIndex = items.findIndex(
-          (item, index) => getItemId(item, index) === over?.id
-        );
-
-        if (oldIndex !== -1 && newIndex !== -1) {
-          const newItems = arrayMove(items, oldIndex, newIndex);
-          onReorder(newItems);
-        }
+      if (!over || active.id === over.id) {
+        return;
       }
+
+      const oldIndex = idToIndexMap.get(active.id as string);
+      const newIndex = idToIndexMap.get(over.id as string);
+
+      if (oldIndex === undefined || newIndex === undefined) {
+        return;
+      }
+
+      onReorder(oldIndex, newIndex);
     },
-    [items, onReorder, getItemId]
+    [idToIndexMap, onReorder]
   );
 
   if (disabled || items.length <= 1) {
@@ -86,10 +98,7 @@ export function SortableGrid<T>({
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <SortableContext
-        items={items.map((item, index) => getItemId(item, index))}
-        strategy={rectSortingStrategy}
-      >
+      <SortableContext items={itemIds} strategy={rectSortingStrategy}>
         <div className={cn("grid", gridCols, gap, className)}>
           {items.map((item, index) => renderItem(item, index))}
         </div>

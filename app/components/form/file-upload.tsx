@@ -1,14 +1,16 @@
 import { Upload } from "lucide-react";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import type { FieldError } from "react-hook-form";
+import type { FieldError, UseFieldArrayMove } from "react-hook-form";
 import { cn } from "~/lib/utils";
 import { SortableGrid } from "~/components/ui/sortable-grid";
 import { FilePreviewItem } from "~/components/form/file-preview-item";
 
 type FileUploadProps = {
   files: File[];
-  onChange: (files: File[]) => void;
+  onAddFiles: (newFiles: File[]) => void;
+  onRemoveFile: (index: number) => void;
+  onMoveFile: UseFieldArrayMove;
   error?: FieldError;
   maxFiles?: number;
   maxSize?: number; // in bytes
@@ -17,7 +19,9 @@ type FileUploadProps = {
 
 export default function FileUpload({
   files,
-  onChange,
+  onAddFiles,
+  onRemoveFile,
+  onMoveFile,
   error,
   maxFiles = 10,
   maxSize = 5 * 1024 * 1024, // 5MB
@@ -27,10 +31,9 @@ export default function FileUpload({
 }: FileUploadProps) {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      const newFiles = [...files, ...acceptedFiles].slice(0, maxFiles);
-      onChange(newFiles);
+      onAddFiles(acceptedFiles);
     },
-    [files, onChange, maxFiles]
+    [files, onAddFiles, maxFiles]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -42,10 +45,9 @@ export default function FileUpload({
 
   const removeFile = useCallback(
     (index: number) => {
-      const newFiles = files.filter((_, i) => i !== index);
-      onChange(newFiles);
+      onRemoveFile(index);
     },
-    [files, onChange]
+    [files, onRemoveFile]
   );
 
   const formatFileSize = useCallback((bytes: number) => {
@@ -55,6 +57,20 @@ export default function FileUpload({
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   }, []);
+
+  const renderItem = useCallback(
+    (file: File, index: number) => (
+      <FilePreviewItem
+        key={index}
+        file={file}
+        index={index}
+        onRemove={removeFile}
+        formatFileSize={formatFileSize}
+        disabled={files.length <= 1}
+      />
+    ),
+    [files, removeFile, formatFileSize]
+  );
 
   return (
     <div className="space-y-4">
@@ -110,18 +126,9 @@ export default function FileUpload({
 
           <SortableGrid
             items={files}
-            onReorder={onChange}
-            getItemId={(_, index) => `file-${index}`}
+            onReorder={onMoveFile}
             disabled={files.length <= 1}
-            renderItem={(file, index) => (
-              <FilePreviewItem
-                file={file}
-                index={index}
-                onRemove={removeFile}
-                formatFileSize={formatFileSize}
-                disabled={files.length <= 1}
-              />
-            )}
+            renderItem={renderItem}
           />
         </div>
       )}
