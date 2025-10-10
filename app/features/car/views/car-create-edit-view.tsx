@@ -176,7 +176,7 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
 
       loadFormImages();
     }
-  }, [isEditMode, carData, reset, brands, categories, types]);
+  }, [isEditMode, carData, reset]);
 
   return (
     <>
