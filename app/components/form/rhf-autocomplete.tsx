@@ -91,7 +91,7 @@ export default function RHFAutocomplete({
                     "h-9 w-full justify-between font-normal",
                     !selectedOption && "text-muted-foreground",
                     error &&
-                      "border-destructive focus-visible:border-destructive",
+                      "!border-destructive !focus-visible:border-destructive",
                     className
                   )}
                 >
@@ -123,7 +123,7 @@ export default function RHFAutocomplete({
                         return (
                           <CommandItem
                             key={option.id}
-                            value={option.name}
+                            value={option.id}
                             disabled={option.disabled}
                             onSelect={() => {
                               field.onChange(

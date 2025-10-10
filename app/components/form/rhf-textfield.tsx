@@ -35,10 +35,8 @@ export default function RHFTextField({
   // Helper function to format number with thousand separators
   const formatNumberWithCommas = (value: string): string => {
     if (!value) return value;
-    // Remove existing commas and non-digit characters except decimal point
-    const cleanValue = value.replace(/[^\d.]/g, "");
     // Ensure only one decimal point
-    const parts = cleanValue.split(".");
+    const parts = value.split(".");
     if (parts.length > 2) {
       // If multiple decimal points, keep only the first one
       const [integer, ...decimals] = parts;
@@ -103,6 +101,7 @@ export default function RHFTextField({
               className={cn(
                 type === "number" &&
                   "[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+                error && "border-destructive focus-visible:border-destructive",
                 props.className
               )}
               onKeyDown={handleKeyDown}
