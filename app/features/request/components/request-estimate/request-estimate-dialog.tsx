@@ -114,7 +114,9 @@ export default function RequestEstimateDialog({
             <p>บันทึกการติดต่อลูกค้า</p>
             <RHFTextarea
               name="note"
-              placeholder="โปรดใส่ข้อความที่ต้องการบันทึกของท่าน..."
+              placeholder={
+                isContacted ? "" : "โปรดใส่ข้อความที่ต้องการบันทึกของท่าน..."
+              }
               rows={6}
               disabled={isContacted}
             />
