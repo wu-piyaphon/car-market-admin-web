@@ -144,8 +144,6 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
     if (isEditMode) {
       // Convert image URLs to File objects for edit mode
       const loadFormImages = async () => {
-        const files = await formatImageUrlsToFiles(carData.images);
-
         reset({
           typeId: carData.type.id,
           brandId: carData.brand.id,
@@ -161,8 +159,11 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
           price: carData.price.toString(),
           previousLicensePlate: carData.previousLicensePlate || "",
           newLicensePlate: carData.newLicensePlate || "",
-          files: files,
         });
+
+        const files = await formatImageUrlsToFiles(carData.images);
+
+        reset(prev => ({ ...prev, files }));
       };
 
       loadFormImages();
