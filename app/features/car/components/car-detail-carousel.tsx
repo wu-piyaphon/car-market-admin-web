@@ -40,8 +40,6 @@ export default function CarDetailCarousel({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!api || images.length === 0) return;
 
-      e.preventDefault();
-
       if (e.key === "ArrowLeft") {
         const prevIndex =
           selectedImageIndex > 0 ? selectedImageIndex - 1 : images.length - 1;
