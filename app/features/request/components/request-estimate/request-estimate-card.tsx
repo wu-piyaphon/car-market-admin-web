@@ -32,7 +32,7 @@ export default function RequestEstimateCard({ request }: Props) {
         <img
           src={thumbnail}
           alt={model}
-          className="h-[120px] w-full rounded-lg rounded-t-md object-contain md:h-[150px]"
+          className="h-[120px] w-full rounded-lg rounded-t-md object-cover md:h-[150px]"
         />
       </CardHeader>
       <CardContent className="flex flex-1 flex-col justify-center gap-1.5">
