@@ -93,7 +93,7 @@ export default function CarListCard({ data, salesType }: Props) {
       <div className="flex h-full flex-col px-5 py-4">
         <div className="flex flex-row items-center justify-between">
           <p className="text-md">
-            {modelYear} {model} {subModel}
+            {model} {subModel} {modelYear}
           </p>
           <Switch
             label={checked ? "แสดง" : "ขายแล้ว"}
