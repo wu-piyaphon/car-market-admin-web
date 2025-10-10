@@ -5,7 +5,7 @@ import RHFFileUpload from "~/components/form/rhf-file-upload";
 import RHFTextField from "~/components/form/rhf-textfield";
 import { Button } from "~/components/ui/button";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Form from "~/components/form/form";
 import RHFAutocomplete from "~/components/form/rhf-autocomplete";
@@ -35,14 +35,20 @@ import { fCapitalize } from "~/utils/format-string";
 import { ApiError } from "~/lib/api/types/axios.types";
 import { log } from "~/utils/log";
 
+// ----------------------------------------------------------------------
+
 type Props = {
   carData?: Car;
   salesType: CarSalesType;
 };
 
+// ----------------------------------------------------------------------
+
 export default function CarCreateEditView({ carData, salesType }: Props) {
   const router = useRouter();
   const isEditMode = carData !== undefined;
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const { mutateAsync: createCar } = useCreateCarMutation();
   const { mutateAsync: updateCar } = useUpdateCarMutation();
@@ -144,6 +150,7 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
     if (isEditMode) {
       // Convert image URLs to File objects for edit mode
       const loadFormImages = async () => {
+        setIsLoading(true);
         reset({
           typeId: carData.type.id,
           brandId: carData.brand.id,
@@ -164,6 +171,7 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
         const files = await formatImageUrlsToFiles(carData.images);
 
         reset(prev => ({ ...prev, files }));
+        setIsLoading(false);
       };
 
       loadFormImages();
@@ -326,7 +334,11 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
                 <CardTitle>ยืนยัน</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
-                <Button size="lg" type="submit" loading={isSubmitting}>
+                <Button
+                  size="lg"
+                  type="submit"
+                  loading={isSubmitting || isLoading}
+                >
                   {isEditMode ? "บันทึก" : "เพิ่มรถ"}
                 </Button>
                 <Button

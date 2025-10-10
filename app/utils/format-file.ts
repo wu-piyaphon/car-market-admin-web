@@ -8,9 +8,11 @@ import { log } from "./log";
 export async function formatImageUrlsToFiles(
   imageUrls: string[]
 ): Promise<File[]> {
-  const files: File[] = [];
-
-  for (const url of imageUrls) {
+  // Create an async function to process each URL
+  const processImageUrl = async (
+    url: string,
+    index: number
+  ): Promise<File | null> => {
     try {
       // Fetch the image as blob
       const response = await fetch(url, {
@@ -22,7 +24,7 @@ export async function formatImageUrlsToFiles(
 
       if (!response.ok) {
         console.warn(`Failed to fetch image: ${url} (${response.status})`);
-        continue;
+        return null;
       }
 
       const blob = await response.blob();
@@ -30,7 +32,7 @@ export async function formatImageUrlsToFiles(
       // Skip if not an image
       if (!blob.type.startsWith("image/")) {
         console.warn(`Skipping non-image file: ${url}`);
-        continue;
+        return null;
       }
 
       // Extract filename from URL or create a default one
@@ -40,7 +42,7 @@ export async function formatImageUrlsToFiles(
       // Clean up filename and ensure it has an extension
       if (!fileName || !fileName.includes(".")) {
         const extension = blob.type.split("/")[1] || "jpg";
-        fileName = `image-${Date.now()}.${extension}`;
+        fileName = `image-${Date.now()}-${index}.${extension}`;
       }
 
       // Remove query parameters from filename
@@ -48,11 +50,20 @@ export async function formatImageUrlsToFiles(
 
       // Create File object from blob
       const file = new File([blob], fileName, { type: blob.type });
-      files.push(file);
+      return file;
     } catch (error) {
       log.error(error);
+      return null;
     }
-  }
+  };
+
+  // Process all URLs concurrently
+  const results = await Promise.all(
+    imageUrls.map((url, index) => processImageUrl(url, index))
+  );
+
+  // Filter out null results (failed downloads)
+  const files = results.filter((file): file is File => file !== null);
 
   return files;
 }
