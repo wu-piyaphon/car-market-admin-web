@@ -77,8 +77,8 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
       engineCapacity: 0,
       mileage: "",
       price: "",
-      previousLicensePlate: "",
-      newLicensePlate: "",
+      originalLicensePlate: "",
+      currentLicensePlate: "",
       files: [],
     },
   });
@@ -116,10 +116,10 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
         formData.append("mileage", data.mileage);
       }
       formData.append("price", data.price);
-      if (data.previousLicensePlate) {
-        formData.append("previousLicensePlate", data.previousLicensePlate);
+      if (data.originalLicensePlate) {
+        formData.append("originalLicensePlate", data.originalLicensePlate);
       }
-      formData.append("newLicensePlate", data.newLicensePlate);
+      formData.append("currentLicensePlate", data.currentLicensePlate);
       data.files.forEach(file => {
         formData.append("files", file);
       });
@@ -164,8 +164,8 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
           engineCapacity: carData.engineCapacity,
           mileage: carData.mileage?.toString() || "",
           price: carData.price.toString(),
-          previousLicensePlate: carData.previousLicensePlate || "",
-          newLicensePlate: carData.newLicensePlate || "",
+          originalLicensePlate: carData.originalLicensePlate || "",
+          currentLicensePlate: carData.currentLicensePlate || "",
         });
 
         const files = await formatImageUrlsToFiles(carData.images);
@@ -214,16 +214,8 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
                 </CarFormRow>
 
                 <CarFormRow>
-                  <RHFTextField
-                    name="model"
-                    label="รุ่นรถ"
-                    placeholder="เช่น Vios, City, Almera"
-                  />
-                  <RHFTextField
-                    name="subModel"
-                    label="รุ่นย่อย"
-                    placeholder="เช่น 1.5 G, RS"
-                  />
+                  <RHFTextField name="model" label="รุ่นรถ" />
+                  <RHFTextField name="subModel" label="รุ่นย่อย" />
                 </CarFormRow>
 
                 <CarFormRow>
@@ -258,13 +250,11 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
                   <RHFTextField
                     name="engineCapacity"
                     label="ขนาดเครื่องยนต์ (CC)"
-                    placeholder="เช่น 500"
                     type="number"
                   />
                   <RHFTextField
                     name="mileage"
                     label="เลขไมล์ (ถ้ามี)"
-                    placeholder="เช่น 10,000"
                     thousandSeparator
                   />
                 </CarFormRow>
@@ -273,7 +263,6 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
                   <RHFTextField
                     name="price"
                     label="ราคา (บาท)"
-                    placeholder="เช่น 100,000"
                     thousandSeparator
                   />
                 </CarFormRow>
@@ -288,14 +277,12 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
               <CardContent>
                 <CarFormRow>
                   <RHFTextField
-                    name="previousLicensePlate"
-                    label="ทะเบียนรถเก่า (ถ้ามี)"
-                    placeholder="เช่น กก 1234"
+                    name="currentLicensePlate"
+                    label="ทะเบียนปัจจุบัน"
                   />
                   <RHFTextField
-                    name="newLicensePlate"
-                    label="ทะเบียนรถใหม่"
-                    placeholder="เช่น ขค 1234"
+                    name="originalLicensePlate"
+                    label="ทะเบียนเดิม (ถ้ามี)"
                   />
                 </CarFormRow>
               </CardContent>

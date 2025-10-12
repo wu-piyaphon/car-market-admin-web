@@ -29,7 +29,7 @@ export default function CarListCard({ data, salesType }: Props) {
     price,
     thumbnail,
     model,
-    newLicensePlate,
+    currentLicensePlate,
     type,
     isActive,
   } = data;
@@ -107,7 +107,9 @@ export default function CarListCard({ data, salesType }: Props) {
         <div className="flex flex-row text-sm text-wrap text-gray-500 md:gap-2">
           <div className="flex flex-1 flex-row items-center gap-1">
             <FileText className="size-4" />
-            <p className="text-secondary flex-1">ทะเบียน : {newLicensePlate}</p>
+            <p className="text-secondary flex-1">
+              ทะเบียน : {currentLicensePlate}
+            </p>
           </div>
           <div className="hidden flex-1 flex-row items-center gap-1 md:flex">
             <Tag className="size-4" />

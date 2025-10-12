@@ -85,8 +85,8 @@ export default function CarDetailView({ salesType }: Props) {
     engineType,
     engineCapacity,
     mileage,
-    previousLicensePlate,
-    newLicensePlate,
+    originalLicensePlate,
+    currentLicensePlate,
     isActive,
     images,
     price,
@@ -106,8 +106,8 @@ export default function CarDetailView({ salesType }: Props) {
   ];
 
   const plateDetail = [
-    { label: "ทะเบียนรถเก่า", value: previousLicensePlate || "-" },
-    { label: "ทะเบียนรถใหม่", value: newLicensePlate },
+    { label: "ทะเบียนปัจจุบัน", value: originalLicensePlate || "-" },
+    { label: "ทะเบียนเดิม", value: currentLicensePlate },
   ];
 
   const handleUpdateStatus = async () => {
@@ -155,7 +155,7 @@ export default function CarDetailView({ salesType }: Props) {
     <>
       <CarHeader
         title={`${modelYear} ${brand.name} ${model}`}
-        description={newLicensePlate}
+        description={currentLicensePlate}
         action={
           <Button
             size="lg"

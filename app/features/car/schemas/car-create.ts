@@ -22,8 +22,8 @@ export const carCreateSchema = z.object({
   price: z.string().min(1, "กรุณาระบุราคา"),
 
   // License Information
-  previousLicensePlate: z.string().optional(),
-  newLicensePlate: z.string().min(1, "กรุณาระบุป้ายทะเบียนใหม่"),
+  originalLicensePlate: z.string().optional(),
+  currentLicensePlate: z.string().min(1, "กรุณาระบุป้ายทะเบียนใหม่"),
 
   // Images
   files: z

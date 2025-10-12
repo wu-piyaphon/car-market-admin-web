@@ -12,8 +12,8 @@ export type Car = {
   mileage: number | null;
   price: string;
   images: string[];
-  previousLicensePlate: string | null;
-  newLicensePlate: string;
+  originalLicensePlate: string | null;
+  currentLicensePlate: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -34,8 +34,8 @@ export type CarListItem = {
   subModel: string;
   modelYear: number;
   price: string;
-  previousLicensePlate: string | null;
-  newLicensePlate: string;
+  originalLicensePlate: string | null;
+  currentLicensePlate: string;
   isActive: boolean;
   slug: string;
 };
