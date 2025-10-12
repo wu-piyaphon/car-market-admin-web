@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { useRouter } from "~/hooks/use-router";
 import { paths } from "~/lib/paths";
 import { formatImageUrlsToFiles } from "~/utils/format-file";
+import { compressImages } from "~/utils/compress-file";
 import {
   useCreateCarMutation,
   useUpdateCarMutation,
@@ -99,6 +100,13 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
 
   const onSubmit = async (data: CarCreateSchema) => {
     try {
+      const compressedFiles = await compressImages(data.files, {
+        quality: 0.9, // High quality
+        maxWidth: 1920,
+        maxHeight: 1080,
+        maxSizeKB: 100, // Only compress files larger than 100KB
+      });
+
       const formData = new FormData();
       formData.append("typeId", data.typeId);
       formData.append("brandId", data.brandId);
@@ -120,9 +128,11 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
         formData.append("originalLicensePlate", data.originalLicensePlate);
       }
       formData.append("currentLicensePlate", data.currentLicensePlate);
-      data.files.forEach(file => {
+
+      compressedFiles.forEach(file => {
         formData.append("files", file);
       });
+
       formData.append("salesType", salesType);
 
       if (isEditMode) {
