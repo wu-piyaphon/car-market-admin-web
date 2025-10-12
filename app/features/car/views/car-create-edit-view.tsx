@@ -26,6 +26,7 @@ import {
 import { CarFormRow } from "../components/car-form";
 import CarHeader from "../components/car-header";
 import {
+  CAR_CAPACITY_OPTIONS,
   CAR_COLOR_OPTIONS,
   CAR_ENGINE_TYPE_OPTIONS,
   CAR_TRANSMISSION_OPTIONS,
@@ -75,7 +76,7 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
       transmission: "",
       color: "",
       engineType: "",
-      engineCapacity: 0,
+      engineCapacity: "",
       mileage: "",
       price: "",
       originalLicensePlate: "",
@@ -171,7 +172,7 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
           transmission: carData.transmission,
           color: carData.color,
           engineType: carData.engineType,
-          engineCapacity: carData.engineCapacity,
+          engineCapacity: carData.engineCapacity.toString(),
           mileage: carData.mileage?.toString() || "",
           price: carData.price.toString(),
           originalLicensePlate: carData.originalLicensePlate || "",
@@ -257,10 +258,10 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
                 </CarFormRow>
 
                 <CarFormRow>
-                  <RHFTextField
+                  <RHFAutocomplete
                     name="engineCapacity"
                     label="ขนาดเครื่องยนต์ (CC)"
-                    type="number"
+                    options={CAR_CAPACITY_OPTIONS}
                   />
                   <RHFTextField
                     name="mileage"
