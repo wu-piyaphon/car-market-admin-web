@@ -1,30 +1,21 @@
-export enum CarEngineType {
-  DIESEL = "DIESEL",
-  ELECTRIC = "ELECTRIC",
-  HYBRID = "HYBRID",
-  GASOLINE = "GASOLINE",
-  LPG = "LPG",
-  CNG = "CNG",
-}
-
 export enum CarTransmission {
   MANUAL = "MANUAL",
   AUTOMATIC = "AUTOMATIC",
 }
 
-export const CAR_ENGINE_TYPE_OPTIONS = [
-  { id: CarEngineType.DIESEL, name: "ดีเซล" },
-  { id: CarEngineType.GASOLINE, name: "เบนซิน" },
-  { id: CarEngineType.ELECTRIC, name: "ไฟฟ้า" },
-  { id: CarEngineType.HYBRID, name: "ไฮบริด" },
-  { id: CarEngineType.LPG, name: "LPG" },
-  { id: CarEngineType.CNG, name: "CNG" },
-];
-
 export const CAR_TRANSMISSION_OPTIONS = [
   { id: CarTransmission.MANUAL, name: "เกียร์ธรรมดา" },
   { id: CarTransmission.AUTOMATIC, name: "เกียร์อัตโนมัติ" },
 ];
+
+export const CAR_ENGINE_TYPE_OPTIONS = [
+  "ดีเซล",
+  "เบนซิน",
+  "ไฟฟ้า",
+  "เบนซิน-ไฟฟ้า",
+  "แก๊ส LPG + เบนซิน",
+  "CNG สลับเบนซิน",
+].map(type => ({ id: type, name: type }));
 
 export const CAR_COLOR_OPTIONS = [
   "ขาว",

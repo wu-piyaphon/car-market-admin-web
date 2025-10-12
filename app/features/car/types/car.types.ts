@@ -1,5 +1,5 @@
 import type { Option, OptionWithImage, Pagination } from "~/types/common";
-import type { CarEngineType, CarTransmission } from "../constants/car-options";
+import type { CarTransmission } from "../constants/car-options";
 
 export type Car = {
   id: string;
@@ -7,7 +7,7 @@ export type Car = {
   subModel: string;
   modelYear: number;
   color: string;
-  engineType: CarEngineType;
+  engineType: string;
   engineCapacity: number;
   mileage: number | null;
   price: string;

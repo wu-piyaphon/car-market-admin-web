@@ -1,7 +1,4 @@
-import {
-  CarEngineType,
-  CarTransmission,
-} from "~/features/car/constants/car-options";
+import { CarTransmission } from "~/features/car/constants/car-options";
 import type { Car } from "~/features/car/types/car.types";
 
 export const CAR_LIST: Car[] = [
@@ -45,7 +42,7 @@ export const CAR_LIST: Car[] = [
     createdAt: "2025-07-28T12:00:00Z",
     updatedAt: "2025-07-28T12:00:00Z",
     engineCapacity: 500,
-    engineType: CarEngineType.DIESEL,
+    engineType: "ดีเซล",
     mileage: 10000,
   },
   {
@@ -78,7 +75,7 @@ export const CAR_LIST: Car[] = [
     createdAt: "2025-07-28T12:00:00Z",
     updatedAt: "2025-07-28T12:00:00Z",
     engineCapacity: 250,
-    engineType: CarEngineType.ELECTRIC,
+    engineType: "ไฟฟ้า",
     mileage: 10000,
   },
   {
@@ -111,7 +108,7 @@ export const CAR_LIST: Car[] = [
     createdAt: "2025-07-28T12:00:00Z",
     updatedAt: "2025-07-28T12:00:00Z",
     engineCapacity: 250,
-    engineType: CarEngineType.ELECTRIC,
+    engineType: "ไฟฟ้า",
     mileage: 10000,
   },
   {
@@ -144,7 +141,7 @@ export const CAR_LIST: Car[] = [
     createdAt: "2025-07-28T12:00:00Z",
     updatedAt: "2025-07-28T12:00:00Z",
     engineCapacity: 250,
-    engineType: CarEngineType.ELECTRIC,
+    engineType: "ไฟฟ้า",
     mileage: 10000,
   },
 ];
