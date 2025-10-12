@@ -120,3 +120,16 @@ export function fPadString(
   const padding = padChar.repeat(length - str.length);
   return padStart ? padding + str : str + padding;
 }
+
+/**
+ * Thousand separator for numbers
+ */
+export function fThousandSeparator(
+  value: string | number,
+  separator = ","
+): string {
+  const numStr = typeof value === "number" ? value.toString() : value;
+  const parts = numStr.split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+  return parts.join(".");
+}

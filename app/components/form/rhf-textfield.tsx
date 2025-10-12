@@ -5,6 +5,7 @@ import { Input } from "~/components/ui/input";
 import { cn } from "~/lib/utils";
 import { Label } from "../ui/label";
 import HelperText from "./helper-text";
+import { fThousandSeparator } from "~/utils/format-string";
 
 // ----------------------------------------------------------------------
 
@@ -32,24 +33,6 @@ export default function RHFTextField({
     }
   };
 
-  // Helper function to format number with thousand separators
-  const formatNumberWithCommas = (value: string): string => {
-    if (!value) return value;
-    // Ensure only one decimal point
-    const parts = value.split(".");
-    if (parts.length > 2) {
-      // If multiple decimal points, keep only the first one
-      const [integer, ...decimals] = parts;
-      parts[0] = integer;
-      parts[1] = decimals.join("");
-      parts.length = 2;
-    }
-    // Add commas to integer part
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    // Join back with decimal point if it exists
-    return parts.join(".");
-  };
-
   // Helper function to remove commas for form value
   const removeCommas = (value: string): string => {
     return value.replace(/,/g, "");
@@ -74,7 +57,7 @@ export default function RHFTextField({
             }
 
             // Format display value with commas
-            const formattedValue = formatNumberWithCommas(value);
+            const formattedValue = fThousandSeparator(value);
             e.target.value = formattedValue;
 
             // Send clean value (without commas) to form state
@@ -86,7 +69,7 @@ export default function RHFTextField({
 
         const displayValue =
           thousandSeparator && field.value
-            ? formatNumberWithCommas(String(field.value))
+            ? fThousandSeparator(String(field.value))
             : field.value;
 
         return (
