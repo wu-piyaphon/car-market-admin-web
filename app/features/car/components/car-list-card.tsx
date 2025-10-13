@@ -90,7 +90,7 @@ export default function CarListCard({ data, salesType }: Props) {
       </div>
 
       {/* -- Info -- */}
-      <div className="flex h-full flex-col px-5 py-4">
+      <div className="flex h-full flex-col justify-between px-5 py-4">
         <div className="flex flex-row items-center justify-between gap-1">
           <p className="text-md line-clamp-2 break-after-all">
             {model} {subModel} {modelYear}
@@ -111,22 +111,28 @@ export default function CarListCard({ data, salesType }: Props) {
               ทะเบียน : {currentLicensePlate}
             </p>
           </div>
-          <div className="hidden flex-1 flex-row items-center gap-1 md:flex">
+          <div className="hidden flex-row items-center gap-1 md:flex">
             <Tag className="size-4" />
             <p className="text-secondary flex-1">ประเภท: {type}</p>
           </div>
         </div>
 
-        <Divider className="my-3" />
+        <div>
+          <Divider className="my-3" />
 
-        {/* -- Action -- */}
-        <div className="flex flex-col gap-2 md:flex-row">
-          <Button color="secondary" className="flex-1" onClick={onClickDetail}>
-            ดูรายละเอียด
-          </Button>
-          <Button className="flex-1" onClick={onClickEdit}>
-            แก้ไข
-          </Button>
+          {/* -- Action -- */}
+          <div className="flex flex-col gap-2 md:flex-row">
+            <Button
+              color="secondary"
+              className="flex-1"
+              onClick={onClickDetail}
+            >
+              ดูรายละเอียด
+            </Button>
+            <Button className="flex-1" onClick={onClickEdit}>
+              แก้ไข
+            </Button>
+          </div>
         </div>
       </div>
     </div>
