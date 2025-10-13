@@ -31,7 +31,7 @@ export type RequestEstimateDetail = {
   lineId: string | null;
   images: string[];
   note: string | null;
-  installmentsInMonth: number;
+  remainingInstallmentAmount: number | null;
   status: RequestStatus;
   createdAt: string;
   updatedAt: string;

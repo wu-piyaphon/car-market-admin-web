@@ -27,12 +27,12 @@ export default function RequestEstimateCard({ request }: Props) {
   };
 
   return (
-    <Card>
-      <CardHeader className="grid-rows-none pb-0">
+    <Card className="pt-0">
+      <CardHeader className="grid-rows-none px-0 pb-0">
         <img
           src={thumbnail}
           alt={model}
-          className="h-[120px] w-full rounded-lg rounded-t-md object-cover md:h-[150px]"
+          className="h-[120px] w-full rounded-t-md object-cover md:h-[150px]"
         />
       </CardHeader>
       <CardContent className="flex flex-1 flex-col justify-center gap-1.5">

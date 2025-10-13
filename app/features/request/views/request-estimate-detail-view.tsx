@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import EmptyContent from "~/components/ui/empty-content";
 import { useRouter } from "~/hooks/use-router";
 import { paths } from "~/lib/paths";
-import { fDate } from "~/utils/format-string";
+import { fCurrency, fDate } from "~/utils/format-string";
 import CarDetailCarousel from "../../car/components/car-detail-carousel";
 import CarHeader from "../../car/components/car-header";
 import { useGetRequestEstimateDetail } from "../api/request.queries";
@@ -65,7 +65,7 @@ export default function RequestEstimateDetailView() {
     phoneNumber,
     lineId,
     images,
-    installmentsInMonth,
+    remainingInstallmentAmount,
     status,
     createdAt,
   } = data;
@@ -85,7 +85,13 @@ export default function RequestEstimateDetailView() {
   ];
 
   const requestDetail = [
-    { label: "สถานะรถ", value: installmentsInMonth + " เดือน" },
+    {
+      label: "ค้างผ่อนชำระ",
+      value:
+        remainingInstallmentAmount === null
+          ? "ปลอดภาระ"
+          : fCurrency(remainingInstallmentAmount) + " บาท",
+    },
     { label: "วันที่ขอประเมิน", value: fDate(createdAt) },
   ];
 
