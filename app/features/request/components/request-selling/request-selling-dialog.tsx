@@ -42,11 +42,6 @@ export default function RequestSellingDialog({
 
   const handleConfirm = async () => {
     try {
-      if (isContacted) {
-        onOpenChange(false);
-        return;
-      }
-
       const { note } = getValues();
       await updateRequest({
         id: detail.id,
@@ -61,7 +56,6 @@ export default function RequestSellingDialog({
       });
 
       onOpenChange(false);
-      reset();
     } catch (error) {
       log.error(error);
       toast.error("เกิดข้อผิดพลาด", {
@@ -76,10 +70,11 @@ export default function RequestSellingDialog({
   // ----------------------------------------------------------------------
 
   useEffect(() => {
+    if (!open) return;
     reset({
       note: detail.note || "",
     });
-  }, [detail.note]);
+  }, [detail.note, open]);
 
   // ----------------------------------------------------------------------
 
@@ -111,7 +106,6 @@ export default function RequestSellingDialog({
                 isContacted ? "" : "โปรดใส่ข้อความที่ต้องการบันทึกของท่าน..."
               }
               rows={6}
-              disabled={isContacted}
             />
           </div>
         </Form>
@@ -122,7 +116,6 @@ export default function RequestSellingDialog({
               variant="outline"
               disabled={isUpdatingRequest}
               onClick={() => onOpenChange(false)}
-              className={isContacted ? "hidden" : "block"}
             >
               ยกเลิก
             </Button>
@@ -130,8 +123,9 @@ export default function RequestSellingDialog({
               variant="default"
               loading={isUpdatingRequest}
               onClick={handleConfirm}
+              className="min-w-[70px]"
             >
-              {isContacted ? "ปิด" : "ติดต่อแล้ว"}
+              {isContacted ? "บันทึก" : "ติดต่อแล้ว"}
             </Button>
           </div>
         </DialogFooter>

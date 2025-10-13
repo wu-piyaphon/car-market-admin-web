@@ -43,11 +43,6 @@ export default function RequestEstimateDialog({
 
   const handleConfirm = async () => {
     try {
-      if (isContacted) {
-        onOpenChange(false);
-        return;
-      }
-
       const { note } = getValues();
       await updateRequest({
         id: detail.id,
@@ -62,7 +57,6 @@ export default function RequestEstimateDialog({
       });
 
       onOpenChange(false);
-      reset();
     } catch (error) {
       log.error(error);
       toast.error("เกิดข้อผิดพลาด", {
@@ -77,10 +71,11 @@ export default function RequestEstimateDialog({
   // ----------------------------------------------------------------------
 
   useEffect(() => {
+    if (!open) return;
     reset({
       note: detail.note || "",
     });
-  }, [detail.note]);
+  }, [detail.note, open]);
 
   // ----------------------------------------------------------------------
 
@@ -118,7 +113,6 @@ export default function RequestEstimateDialog({
                 isContacted ? "" : "โปรดใส่ข้อความที่ต้องการบันทึกของท่าน..."
               }
               rows={6}
-              disabled={isContacted}
             />
           </div>
         </Form>
@@ -129,7 +123,6 @@ export default function RequestEstimateDialog({
               onClick={() => onOpenChange(false)}
               variant="outline"
               disabled={isUpdatingRequest}
-              className={isContacted ? "hidden" : "block"}
             >
               ยกเลิก
             </Button>
@@ -137,8 +130,9 @@ export default function RequestEstimateDialog({
               onClick={handleConfirm}
               variant="default"
               loading={isUpdatingRequest}
+              className="min-w-[70px]"
             >
-              {isContacted ? "ปิด" : "ติดต่อแล้ว"}
+              {isContacted ? "บันทึก" : "ติดต่อแล้ว"}
             </Button>
           </div>
         </DialogFooter>
