@@ -310,7 +310,7 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
               <CardContent>
                 <RHFFileUpload
                   name="files"
-                  maxFiles={16}
+                  maxFiles={30}
                   maxSize={5 * 1024 * 1024}
                 />
               </CardContent>
