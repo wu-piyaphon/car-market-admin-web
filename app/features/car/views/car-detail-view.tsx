@@ -28,6 +28,7 @@ import CarHeader from "../components/car-header";
 import type { CarSalesType } from "../types/car.types";
 import { log } from "~/utils/log";
 import { ApiError } from "~/lib/api/types/axios.types";
+import { CarTransmission } from "../constants/car-options";
 
 type Props = {
   salesType: CarSalesType;
@@ -99,7 +100,13 @@ export default function CarDetailView({ salesType }: Props) {
     { label: "รุ่นย่อย", value: subModel },
     { label: "ปีรถ", value: modelYear },
     { label: "สีรถ", value: fCapitalize(color) },
-    { label: "ระบบเกียร์", value: fCapitalize(transmission) },
+    {
+      label: "ระบบเกียร์",
+      value:
+        transmission === CarTransmission.AUTOMATIC
+          ? "เกียร์อัตโนมัติ"
+          : "เกียร์ธรรมดา",
+    },
     { label: "ประเภทเครื่องยนต์", value: fCapitalize(engineType) },
     { label: "ขนาดเครื่องยนต์ CC", value: fCurrency(engineCapacity) },
     { label: "เลขไมล์", value: mileage ? fCurrency(mileage) : "-" },
