@@ -91,8 +91,8 @@ export default function CarListCard({ data, salesType }: Props) {
 
       {/* -- Info -- */}
       <div className="flex h-full flex-col px-5 py-4">
-        <div className="flex flex-row items-center justify-between">
-          <p className="text-md">
+        <div className="flex flex-row items-center justify-between gap-1">
+          <p className="text-md line-clamp-2 break-after-all">
             {model} {subModel} {modelYear}
           </p>
           <Switch
