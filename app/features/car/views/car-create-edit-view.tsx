@@ -152,7 +152,9 @@ export default function CarCreateEditView({ carData, salesType }: Props) {
       log.error(error);
       toast.error("เกิดข้อผิดพลาด", {
         description:
-          error instanceof ApiError ? error.message : "ไม่สามารถเพิ่มรถใหม่ได้",
+          error instanceof ApiError
+            ? error.message
+            : `ไม่สามารถ${isEditMode ? "แก้ไข" : "เพิ่ม"}รถได้`,
       });
     }
   };
