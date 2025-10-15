@@ -70,6 +70,7 @@ function Button({
       type="button"
       data-slot="button"
       className={cn(buttonVariants({ variant, size, color, className }))}
+      disabled={loading || props.disabled}
       {...props}
     >
       {loading ? <Loader2Icon className="animate-spin" /> : children}
