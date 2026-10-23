@@ -76,7 +76,6 @@ The platform provides complete CRUD operations for car management, request handl
 - **ESLint** - Code linting with TypeScript support
 - **Prettier** - Code formatting
 - **Lefthook** - Git hooks management
-- **Docker** - Containerization support
 
 ## 📂 Project Structure
 
